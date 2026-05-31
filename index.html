@@ -2,144 +2,831 @@
 <html lang="ko">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<meta name="viewport" content="width=device-width,initial-scale=1">
 <title>보이(VOY)는 VOTE</title>
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;500;700;900&display=swap" rel="stylesheet">
 <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore-compat.js"></script>
 <style>
-:root{--green:#1f7a4d;--green-deep:#155c39;--green-soft:#e8f4ec;--green-line:#bfe0cc;--white:#ffffff;--ink:#1a1a1a;--yellow:#ffd21f;--red:#e23b2e;--gray:#6b7770;--line:#dfe7e2;--shadow:0 8px 30px rgba(21,92,57,.12);}
-*{box-sizing:border-box;-webkit-tap-highlight-color:transparent;}
-html,body{margin:0;padding:0;}
-body{font-family:'Noto Sans KR',sans-serif;background:radial-gradient(1200px 600px at 100% -10%,#f3faf5 0%,transparent 60%),radial-gradient(900px 500px at -10% 110%,#eef8f1 0%,transparent 55%),var(--white);color:var(--ink);min-height:100vh;-webkit-font-smoothing:antialiased;}
-.app{max-width:900px;margin:0 auto;padding:22px 18px 90px;min-height:100vh;}
-.topbar{display:flex;align-items:center;gap:12px;padding:10px 4px 18px;}
-.logo{font-family:'Noto Sans KR',sans-serif;font-size:22px;font-weight:900;color:var(--green-deep);display:flex;align-items:center;gap:9px;letter-spacing:-.5px;}
-.logo .dot{width:30px;height:30px;border-radius:9px;background:linear-gradient(135deg,var(--green),var(--green-deep));display:grid;place-items:center;color:#fff;font-size:16px;box-shadow:var(--shadow);}
-.ev-tag{margin-left:auto;font-size:13px;color:var(--green-deep);background:var(--green-soft);border:1px solid var(--green-line);padding:6px 12px;border-radius:999px;font-weight:700;max-width:55%;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
-.card{background:var(--white);border:1px solid var(--line);border-radius:20px;padding:26px 22px;box-shadow:var(--shadow);margin-bottom:18px;}
-.card h1{font-family:'Noto Sans KR',sans-serif;font-weight:900;font-size:27px;margin:0 0 6px;color:var(--green-deep);letter-spacing:-.5px;}
-.card h2{font-family:'Noto Sans KR',sans-serif;font-weight:900;font-size:21px;margin:0 0 14px;color:var(--ink);letter-spacing:-.3px;}
-.sub{color:var(--gray);font-size:14px;margin:0 0 20px;line-height:1.6;}
-label.fl{display:block;font-weight:700;font-size:14px;margin:14px 0 7px;color:var(--ink);}
-input[type=text],input[type=password],input[type=number],textarea,select{width:100%;border:2px solid var(--line);border-radius:13px;padding:13px 15px;font-size:16px;font-family:inherit;color:var(--ink);background:#fbfdfc;transition:border-color .15s,box-shadow .15s;}
-input:focus,textarea:focus,select:focus{outline:none;border-color:var(--green);box-shadow:0 0 0 4px rgba(31,122,77,.12);}
-textarea{resize:vertical;min-height:150px;line-height:1.7;}
-.pw-input{letter-spacing:8px;font-weight:700;text-align:center;}
-.btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;border:none;border-radius:13px;padding:14px 22px;font-size:16px;font-weight:700;font-family:inherit;cursor:pointer;transition:transform .08s,filter .15s,box-shadow .15s;width:100%;}
-.btn:active{transform:translateY(1px);}
-.btn-green{background:linear-gradient(135deg,var(--green),var(--green-deep));color:#fff;box-shadow:0 6px 18px rgba(31,122,77,.3);}
-.btn-green:hover{filter:brightness(1.05);}
-.btn-ghost{background:var(--green-soft);color:var(--green-deep);border:1.5px solid var(--green-line);box-shadow:none;}
-.btn-yellow{background:var(--yellow);color:var(--ink);}
-.btn-red{background:var(--red);color:#fff;}
-.btn-dark{background:var(--ink);color:#fff;}
-.btn-sm{padding:10px 14px;font-size:14px;width:auto;}
-.btn-row{display:flex;gap:10px;margin-top:18px;}
-.btn-row .btn{flex:1;}
-.btn:disabled{opacity:.5;cursor:not-allowed;}
-.choice{display:grid;gap:14px;}
-.choice-btn{text-align:left;border:2px solid var(--line);border-radius:18px;background:#fff;padding:20px;cursor:pointer;transition:border-color .15s,transform .08s;display:flex;gap:16px;align-items:center;}
-.choice-btn:hover{border-color:var(--green);}
-.choice-ic{width:50px;height:50px;border-radius:14px;display:grid;place-items:center;font-size:24px;flex-shrink:0;background:var(--green-soft);}
-.choice-btn .t{font-weight:900;font-size:17px;}
-.choice-btn .d{color:var(--gray);font-size:13px;margin-top:3px;}
-.hub-grid{display:grid;grid-template-columns:1fr 1fr 1fr;gap:12px;}
-@media(max-width:620px){.hub-grid{grid-template-columns:1fr;}}
-.hub-tile{border:2px solid var(--line);border-radius:18px;background:#fff;padding:22px 16px;text-align:center;cursor:pointer;transition:border-color .15s,transform .08s;}
-.hub-tile:hover{border-color:var(--green);}
-.hub-tile .ic{font-size:30px;margin-bottom:10px;}
-.hub-tile .t{font-weight:900;font-size:16px;}
-.hub-tile .d{color:var(--gray);font-size:12px;margin-top:5px;line-height:1.5;}
-.stepper{display:flex;align-items:center;gap:6px;margin:4px 0 18px;flex-wrap:wrap;}
-.chip{font-size:12px;font-weight:700;padding:5px 11px;border-radius:999px;background:var(--green-soft);color:var(--green-deep);}
-.chip.cur{background:var(--green);color:#fff;}
-.pbar{height:9px;background:var(--green-soft);border-radius:99px;overflow:hidden;margin:6px 0 4px;}
-.pbar>i{display:block;height:100%;background:linear-gradient(90deg,var(--yellow),var(--green));transition:width .3s;}
-.uploader{border:2.5px dashed var(--green-line);border-radius:16px;background:var(--green-soft);min-height:170px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:8px;cursor:pointer;color:var(--green-deep);transition:border-color .15s,background .15s;position:relative;overflow:hidden;}
-.uploader:hover{border-color:var(--green);}
-.uploader .up-ic{font-size:38px;}
-.uploader .up-t{font-weight:700;font-size:14px;}
-.uploader .up-d{font-size:12px;color:var(--gray);}
-.uploader img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;}
-.uploader .change-hint{position:absolute;bottom:8px;right:10px;background:rgba(0,0,0,.6);color:#fff;font-size:11px;padding:4px 9px;border-radius:8px;}
-.img-row{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin:14px 0;}
-@media(max-width:620px){.img-row{grid-template-columns:1fr;}}
-.dots{display:flex;flex-wrap:wrap;gap:6px;margin-top:14px;}
-.dots i{width:13px;height:13px;border-radius:50%;background:var(--line);font-style:normal;}
-.dots i.done{background:var(--green);}
-.dots i.cur{background:var(--yellow);box-shadow:0 0 0 3px #fff6d0;}
-.judge-img{width:100%;border-radius:16px;border:1px solid var(--line);background:#f3f3f3;display:block;margin-bottom:16px;max-height:48vh;object-fit:contain;}
-.judge-imgs{display:flex;flex-direction:column;gap:12px;margin-bottom:16px;}
-.judge-imgs .judge-img{margin-bottom:0;}
-.judge-text{background:var(--green-soft);border:1px solid var(--green-line);border-radius:14px;padding:16px 16px;font-size:16px;line-height:1.85;white-space:pre-wrap;color:var(--ink);font-family:'Noto Sans KR',sans-serif;margin-bottom:6px;}
-.crit{margin-top:18px;}
-.crit-row{padding:14px 0;border-bottom:1px dashed var(--line);}
-.crit-row:last-child{border-bottom:none;}
-.crit-head{display:flex;justify-content:space-between;align-items:center;margin-bottom:10px;}
-.crit-name{font-weight:900;font-size:16px;}
-.crit-val{font-family:'Noto Sans KR',sans-serif;font-size:22px;color:var(--green-deep);min-width:46px;text-align:right;}
-.crit-val b{font-size:13px;color:var(--gray);font-weight:400;}
-.scale{display:flex;gap:5px;}
-.scale button{flex:1;border:1.5px solid var(--green-line);background:#fff;color:var(--green-deep);border-radius:9px;padding:9px 0;font-size:14px;font-weight:700;cursor:pointer;transition:all .1s;font-family:inherit;}
-.scale button.on{background:var(--green);color:#fff;border-color:var(--green);transform:scale(1.04);}
-.center{text-align:center;}
-.big-emoji{font-size:46px;text-align:center;margin:6px 0;}
-.counter-big{font-family:'Noto Sans KR',sans-serif;font-size:40px;font-weight:900;color:var(--green-deep);text-align:center;letter-spacing:-1px;}
-.counter-big small{font-size:18px;color:var(--gray);}
-.qr-wrap{text-align:center;padding:8px 0;}
-.qr-box{display:inline-block;background:#fff;padding:16px;border-radius:18px;border:2px solid var(--green-line);box-shadow:var(--shadow);}
-.qr-box canvas,.qr-box img{display:block;}
-.qr-url{margin-top:12px;font-size:13px;color:var(--gray);word-break:break-all;background:var(--green-soft);padding:10px 12px;border-radius:10px;}
-.note{font-size:13px;padding:11px 14px;border-radius:11px;margin:12px 0;line-height:1.6;}
-.note.warn{background:#fff3f2;border:1px solid #f4c4bf;color:var(--red-deep);}
-.note.info{background:var(--green-soft);border:1px solid var(--green-line);color:var(--green-deep);}
-.foot{text-align:center;font-size:11px;color:#b8c4bd;letter-spacing:.4px;padding:26px 0 8px;font-weight:500;}
-.loading{position:fixed;inset:0;background:rgba(255,255,255,.8);display:none;place-items:center;z-index:100;backdrop-filter:blur(2px);}
-.loading.on{display:grid;}
-.spinner{width:46px;height:46px;border:5px solid var(--green-soft);border-top-color:var(--green);border-radius:50%;animation:spin .8s linear infinite;}
-@keyframes spin{to{transform:rotate(360deg);}}
-.hidden{display:none!important;}
-#toast{position:fixed;left:50%;bottom:80px;transform:translateX(-50%) translateY(20px);background:var(--ink);color:#fff;padding:12px 20px;border-radius:12px;font-size:14px;font-weight:700;opacity:0;pointer-events:none;transition:.25s;z-index:120;box-shadow:var(--shadow);max-width:88%;text-align:center;}
-#toast.on{opacity:1;transform:translateX(-50%) translateY(0);}
-.jpill{display:flex;align-items:center;gap:6px;font-size:14px;font-weight:700;padding:8px 13px;border-radius:999px;border:1.5px solid var(--line);background:#fff;color:var(--gray);}
-.jpill.done{background:var(--green);color:#fff;border-color:var(--green);}
-.jpill .d2{width:9px;height:9px;border-radius:50%;background:var(--line);}
-.jpill.done .d2{background:#fff;}
-.status-grid{display:flex;flex-wrap:wrap;gap:9px;margin:14px 0;}
-.judge-status-grid{display:flex;flex-direction:column;gap:12px;margin:16px 0;}
-.judge-status-item{padding:12px;background:var(--green-soft);border:1px solid var(--green-line);border-radius:12px;}
-.judge-status-name{font-weight:700;font-size:15px;color:var(--green-deep);margin-bottom:6px;}
-.judge-progress{display:flex;align-items:center;gap:10px;}
-.judge-progress-bar{flex:1;height:24px;background:#fff;border:1px solid var(--green-line);border-radius:8px;overflow:hidden;position:relative;}
-.judge-progress-bar .fill{height:100%;background:linear-gradient(90deg,var(--yellow),var(--green));transition:width .3s;display:flex;align-items:center;justify-content:center;color:#fff;font-size:11px;font-weight:700;}
-.judge-progress-text{min-width:50px;text-align:right;font-weight:700;color:var(--green-deep);}
-.rank{display:flex;gap:14px;align-items:flex-start;padding:16px;border-radius:16px;margin-bottom:11px;border:1px solid var(--line);background:#fff;}
-.rank.top1{background:linear-gradient(135deg,#fffdf2,#fff6d0);border-color:var(--yellow);box-shadow:0 8px 24px rgba(230,184,0,.25);}
-.rank.top2{background:#f7faf8;border-color:var(--green-line);}
-.rank.top3{background:#fbfdfc;border-color:var(--green-line);}
-.medal{font-family:'Noto Sans KR',sans-serif;font-size:26px;width:46px;height:46px;border-radius:50%;display:grid;place-items:center;flex-shrink:0;color:#fff;font-weight:900;}
-.medal.m1{background:var(--yellow);color:var(--ink);}
-.medal.m2{background:#9fb3a8;}
-.medal.m3{background:#cd9b6a;}
-.medal.mx{background:var(--green-soft);color:var(--green-deep);font-size:18px;}
-.rank-info{flex:1;min-width:0;}
-.rank-info .nm{font-weight:900;font-size:15px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
-.rank-info .who{font-size:12.5px;color:var(--red-deep);font-weight:700;margin-top:2px;}
-.rank-info .who .org{color:var(--gray);font-weight:500;}
-.rank-score{font-family:'Noto Sans KR',sans-serif;font-size:24px;font-weight:900;color:var(--green-deep);text-align:right;}
-.rank-score small{font-size:12px;color:var(--gray);display:block;}
-.rank-imgs{width:120px;flex-shrink:0;display:flex;flex-direction:column;gap:8px;}
-.rank-imgs img{width:100%;height:80px;object-fit:cover;border-radius:8px;border:1px solid var(--line);}
+:root { --green: #1f7a4d; --green-deep: #155c39; --green-soft: #e8f4ec; --green-line: #bfe0cc; --white: #fff; --ink: #1a1a1a; --yellow: #ffd21f; --red: #e23b2e; --gray: #6b7770; --line: #dfe7e2; --shadow: 0 8px 30px rgba(21,92,57,.12); }
+* { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+html, body { margin: 0; padding: 0; }
+body { font-family: 'Noto Sans KR'; background: radial-gradient(1200px 600px at 100% -10%, #f3faf5 0%, transparent 60%), radial-gradient(900px 500px at -10% 110%, #eef8f1 0%, transparent 55%), var(--white); color: var(--ink); min-height: 100vh; }
+.app { max-width: 900px; margin: 0 auto; padding: 22px 18px 90px; }
+.topbar { display: flex; align-items: center; gap: 12px; padding: 10px 4px 18px; }
+.logo { font-size: 22px; font-weight: 900; color: var(--green-deep); display: flex; align-items: center; gap: 9px; letter-spacing: -0.5px; }
+.logo .dot { width: 30px; height: 30px; border-radius: 9px; background: linear-gradient(135deg, var(--green), var(--green-deep)); display: grid; place-items: center; color: #fff; font-size: 16px; box-shadow: var(--shadow); }
+.ev-tag { margin-left: auto; font-size: 13px; color: var(--green-deep); background: var(--green-soft); border: 1px solid var(--green-line); padding: 6px 12px; border-radius: 999px; font-weight: 700; max-width: 55%; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; display: none; }
+.card { background: var(--white); border: 1px solid var(--line); border-radius: 20px; padding: 26px 22px; box-shadow: var(--shadow); margin-bottom: 18px; }
+.card h1 { font-weight: 900; font-size: 27px; margin: 0 0 6px; color: var(--green-deep); letter-spacing: -0.5px; }
+.card h2 { font-weight: 900; font-size: 21px; margin: 0 0 14px; color: var(--ink); letter-spacing: -0.3px; }
+.sub { color: var(--gray); font-size: 14px; margin: 0 0 20px; line-height: 1.6; }
+label { display: block; font-weight: 700; font-size: 14px; margin: 14px 0 7px; color: var(--ink); }
+input[type=text], input[type=password], input[type=number], textarea, select { width: 100%; border: 2px solid var(--line); border-radius: 13px; padding: 13px 15px; font-size: 16px; font-family: inherit; color: var(--ink); background: #fbfdfc; transition: border-color .15s, box-shadow .15s; }
+input:focus, textarea:focus, select:focus { outline: none; border-color: var(--green); box-shadow: 0 0 0 4px rgba(31,122,77,.12); }
+textarea { resize: vertical; min-height: 150px; line-height: 1.7; }
+.btn { display: inline-flex; align-items: center; justify-content: center; gap: 8px; border: none; border-radius: 13px; padding: 14px 22px; font-size: 16px; font-weight: 700; font-family: inherit; cursor: pointer; transition: transform .08s, filter .15s, box-shadow .15s; width: 100%; }
+.btn:active { transform: translateY(1px); }
+.btn-green { background: linear-gradient(135deg, var(--green), var(--green-deep)); color: #fff; box-shadow: 0 6px 18px rgba(31,122,77,.3); }
+.btn-green:hover { filter: brightness(1.05); }
+.btn-ghost { background: var(--green-soft); color: var(--green-deep); border: 1.5px solid var(--green-line); box-shadow: none; }
+.btn-sm { padding: 10px 14px; font-size: 14px; width: auto; }
+.btn-row { display: flex; gap: 10px; margin-top: 18px; }
+.btn-row .btn { flex: 1; }
+.choice { display: grid; gap: 14px; }
+.choice-btn { text-align: left; border: 2px solid var(--line); border-radius: 18px; background: #fff; padding: 20px; cursor: pointer; transition: border-color .15s, transform .08s; display: flex; gap: 16px; align-items: center; }
+.choice-btn:hover { border-color: var(--green); }
+.choice-ic { width: 50px; height: 50px; border-radius: 14px; display: grid; place-items: center; font-size: 24px; flex-shrink: 0; background: var(--green-soft); }
+.choice-btn .t { font-weight: 900; font-size: 17px; }
+.choice-btn .d { color: var(--gray); font-size: 13px; margin-top: 3px; }
+.foot { text-align: center; font-size: 11px; color: #b8c4bd; letter-spacing: .4px; padding: 26px 0 8px; font-weight: 500; }
+.loading { position: fixed; inset: 0; background: rgba(255,255,255,.8); display: none; place-items: center; z-index: 100; }
+.loading.on { display: grid; }
+.spinner { width: 46px; height: 46px; border: 5px solid var(--green-soft); border-top-color: var(--green); border-radius: 50%; animation: spin .8s linear infinite; }
+@keyframes spin { to { transform: rotate(360deg); } }
+#toast { position: fixed; left: 50%; bottom: 80px; transform: translateX(-50%) translateY(20px); background: var(--ink); color: #fff; padding: 12px 20px; border-radius: 12px; font-size: 14px; font-weight: 700; opacity: 0; pointer-events: none; transition: .25s; z-index: 120; box-shadow: var(--shadow); max-width: 88%; text-align: center; }
+#toast.on { opacity: 1; transform: translateX(-50%) translateY(0); }
+.hidden { display: none !important; }
 </style>
 </head>
 <body>
 <div class="loading" id="loading"><div class="spinner"></div></div>
 <div id="toast"></div>
-<div class="app"><div class="topbar"><div class="logo"><span class="dot">★</span> 보이(VOY)는 VOTE</div><div class="ev-tag hidden" id="evTag"></div></div><div id="screen"></div><div class="foot">Planning and Production by mujjinhwan</div></div>
-<script>const firebaseConfig={apiKey:"AIzaSyDIespzZird2IAMIos5TdGtZYxPS5GpmuM",authDomain:"voyisvote.firebaseapp.com",projectId:"voyisvote",storageBucket:"voyisvote.firebasestorage.app",messagingSenderId:"377416597184",appId:"1:377416597184:web:fcbcd92a63df13e7313725"};let db=null;try{const app=firebase.initializeApp(firebaseConfig);db=firebase.firestore();console.log("✓ Firebase");}catch(e){console.error("Firebase init",e);}const _mk=["NjIwMmV0b3","ZzaXlvdg=="];function _master(){try{return atob(_mk.join("")).split("").reverse().join("");}catch(e){return "";}}const DEFAULT_CRITERIA=[{key:"c0",name:"이익성"},{key:"c1",name:"창의성"},{key:"c2",name:"흥미성"},{key:"c3",name:"현실성"},{key:"c4",name:"적합성"}];function getCriteria(){const ev=STATE.event;if(ev&&Array.isArray(ev.criteria)&&ev.criteria.length)return ev.criteria;return DEFAULT_CRITERIA;}const $=(s)=>document.querySelector(s);const screen=$("#screen");const loading=$("#loading");function showLoad(b){loading.classList.toggle("on",b);}let toastT;function toast(msg){const t=$("#toast");t.textContent=msg;t.classList.add("on");clearTimeout(toastT);toastT=setTimeout(()=>t.classList.remove("on"),2200);}function esc(s){return(s||"").replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));}function isWritten(w){return!!(w&&(w.text||w.title||(w.imgs&&w.imgs.length)));}const params=new URLSearchParams(location.search);const baseUrl=location.origin+location.pathname;function rememberJudge(eventId,jno){localStorage.setItem("judge_"+eventId,jno);}function recallJudge(eventId){return localStorage.getItem("judge_"+eventId);}let STATE={eventId:null,pw:null,event:null,unsub:null};let imgCache={};function evRef(id){return db.collection("events").doc(id);}async function loadEvent(id){const s=await evRef(id).get();return s.exists?s.data():null;}function imgRef(id,idx,imgNum){return db.collection("events").doc(id).collection("images").doc(String(idx)+"_"+imgNum);}async function saveImg(id,idx,imgNum,dataUrl){await imgRef(id,idx,imgNum).set({data:dataUrl});}async function loadImg(id,idx,imgNum){try{const s=await imgRef(id,idx,imgNum).get();return s.exists?s.data().data:"";}catch(e){return "";}}async function loadAllImgs(id,count){const out={};await Promise.all(Array.from({length:count},(_,i)=>Promise.all([loadImg(id,i,1).then(d=>{if(d){if(!out[i])out[i]=[];out[i][0]=d;}}),loadImg(id,i,2).then(d=>{if(d){if(!out[i])out[i]=[];out[i][1]=d;}})]));return out;}function guardFb(){if(db)return true;screen.innerHTML='<div class="card"><div class="big-emoji">⚙️</div><h1 class="center">Firebase 설정이 필요해요</h1></div>';return false;}function renderHome(){$("#evTag").classList.add("hidden");if(params.get("ev")&&params.get("role")==="judge"){if(params.get("type")==="deep"){joinAsDeepJudge(params.get("ev"));}else{joinAsJudge(params.get("ev"));}return;}if(!guardFb())return;screen.innerHTML='<div class="card"><h1>안녕하세요 👋</h1><p class="sub">공모전 Voice를 등록하고, QR로 심사자들의 점수를 모아 순위를 매기는 시스템입니다.</p><div class="choice"><button class="choice-btn" onclick="window.__newEvent()"><div class="choice-ic">✨</div><div><div class="t">새 이벤트 만들기</div><div class="d">이벤트 이름과 4자리 비밀번호를 정합니다</div></div></button><button class="choice-btn" onclick="window.__openEvent()"><div class="choice-ic">📂</div><div><div class="t">기존 이벤트 열기</div><div class="d">전에 만든 이벤트를 이어서 진행/결과 확인</div></div></button></div><button class="btn btn-ghost btn-sm" style="margin-top:16px;width:100%;opacity:.7" onclick="window.__admin()">🔒 관리자 모드</button></div>';}function newEventForm(){screen.innerHTML='<div class="card"><h1>새 이벤트 만들기</h1><p class="sub">이벤트 이름과 비밀번호를 정합니다.</p><label class="fl">이벤트 이름</label><input type="text" id="evName" placeholder="예: 2026 상반기 공모전" maxlength="40"><label class="fl">작성 주체자 이름</label><input type="text" id="evOwner" placeholder="예: 유일한" maxlength="30"><label class="fl">4자리 비밀번호</label><input type="password" id="evPw" class="pw-input" inputmode="numeric" maxlength="4" placeholder="● ● ● ●"><label class="fl">Voice 개수</label><input type="number" id="voiceCount" min="1" max="100" value="5" inputmode="numeric"><label class="fl">심사 기준 개수</label><select id="critCount" onchange="window.__buildCritInputs()">'+'<option value="3">3개</option><option value="4">4개</option><option value="5" selected>5개</option><option value="6">6개</option><option value="7">7개</option>'+'</select><div id="critInputs" style="margin-top:10px"></div><div class="btn-row"><button class="btn btn-ghost" onclick="window.__home()">뒤로</button><button class="btn btn-green" onclick="window.__createEvent()">만들기 →</button></div></div>';buildCritInputs();}function buildCritInputs(){const n=parseInt($("#critCount").value);const box=$("#critInputs");const prev=[...box.querySelectorAll("input")].map(i=>i.value);let html="";for(let i=0;i<n;i++){const val=prev[i]!==undefined?prev[i]:DEFAULT_CRITERIA[i]||"";html+='<input type="text" class="critName" placeholder="기준 '+i+1+' 이름" value="'+esc(val)+'" style="margin-bottom:8px">';}box.innerHTML=html;}async function createEvent(){const name=$("#evName").value.trim();const owner=$("#evOwner").value.trim();const pw=$("#evPw").value.trim();const voiceCount=parseInt($("#voiceCount").value);if(name.length<2)return toast("이벤트 이름을 입력하세요");if(owner.length<1)return toast("작성 주체자 이름을 입력하세요");if(!/^\d{4}$/.test(pw))return toast("비밀번호는 숫자 4자리");if(!voiceCount||voiceCount<1||voiceCount>100)return toast("Voice는 1~100개");const critNames=[...document.querySelectorAll(".critName")].map(i=>i.value.trim());if(critNames.some(c=>!c))return toast("모든 심사 기준 이름을 입력하세요");const criteria=critNames.map((nm,i)=>({key:"c"+i,name:nm}));showLoad(true);try{const id="ev_"+Date.now().toString(36)+Math.random().toString(36).slice(2,6);const works=Array.from({length:voiceCount},()=>({imgs:[],title:"",text:"",org:"",author:""}));const data={name,owner,pw,criteria,totalWorks:voiceCount,works,phase:"input",judges:0,currentWork:0,scores:{},deepScores:{},voteStarted:false};await evRef(id).set(data);STATE.eventId=id;STATE.pw=pw;showLoad(false);enterHub();}catch(e){showLoad(false);toast("생성 실패: "+e.message);}}function openEventForm(){screen.innerHTML='<div class="card"><h1>기존 이벤트 열기</h1><div id="evList"><p class="sub">불러오는 중...</p></div><label class="fl">이벤트 ID</label><input type="text" id="openId" placeholder="ev_xxxxx"><label class="fl">비밀번호</label><input type="password" id="openPw" class="pw-input" inputmode="numeric" maxlength="4" placeholder="● ● ● ●"><div class="btn-row"><button class="btn btn-ghost" onclick="window.__home()">뒤로</button><button class="btn btn-green" onclick="window.__doOpen()">열기 →</button></div></div>';listEvents();}async function listEvents(){try{const snap=await db.collection("events").get();const items=[];snap.forEach(d=>{const v=d.data();items.push({id:d.id,name:v.name,phase:v.phase,n:v.totalWorks});});const el=$("#evList");if(!items.length){el.innerHTML='<p class="sub">아직 만들어진 이벤트가 없습니다.</p>';return;}items.reverse();const phaseTxt={input:"입력중",judging:"즉석심사중",deepjudging:"진중히심사중",done:"완료"};el.innerHTML='<div class="choice" style="margin-bottom:6px">'+items.map(it=>'<button class="choice-btn" style="padding:13px 15px" onclick="document.getElementById(\'openId\').value=\''+it.id+'\';document.getElementById(\'openPw\').focus()"><div class="choice-ic" style="width:38px;height:38px;font-size:17px">📋</div><div><div class="t" style="font-size:15px">'+esc(it.name)+'</div><div class="d">'+it.id+' · Voice '+it.n+'개 · '+phaseTxt[it.phase]+'</div></div></button>').join("")+'</div>';}catch(e){$("#evList").innerHTML='<p class="sub">목록 로드 실패</p>';}}async function doOpen(){const id=$("#openId").value.trim();const pw=$("#openPw").value.trim();if(!id)return toast("이벤트 ID를 입력/선택하세요");showLoad(true);const ev=await loadEvent(id);showLoad(false);if(!ev)return toast("이벤트를 찾을 수 없습니다");if(ev.pw!==pw)return toast("비밀번호가 틀립니다");STATE.eventId=id;STATE.pw=pw;enterHub();}async function enterHub(){showLoad(true);STATE.event=await loadEvent(STATE.eventId);showLoad(false);const ev=STATE.event;$("#evTag").classList.remove("hidden");$("#evTag").textContent="📋 "+ev.name;screen.innerHTML='<div class="card"><div class="stepper"><span class="chip '+(ev.phase==='input'?'cur':'')+'"1 Voice 입력</span><span class="chip '+(ev.phase==='judging'?'cur':'')+'"2 심사</span><span class="chip '+(ev.phase==='done'?'cur':'')+'"3 결과</span></div><h1>'+esc(ev.name)+'</h1><div class="hub-grid"><div class="hub-tile" onclick="window.__goInput()"><div class="ic">📝</div><div class="t">Voice 입력</div><div class="d">현재 '+ev.totalWorks+'개 등록</div></div><div class="hub-tile" onclick="window.__goJudge()"><div class="ic">📱</div><div class="t">심사 시작</div><div class="d">즉석/진중히<br/>심사 선택</div></div><div class="hub-tile" onclick="window.__goResult()"><div class="ic">🏆</div><div class="t">결과 보기</div><div class="d">최종 순위</div></div></div><button class="btn btn-ghost" style="margin-top:8px" onclick="window.__home()">← 홈으로</button></div>';}let inputIdx=0;async function goInput(){showLoad(true);STATE.event=await loadEvent(STATE.eventId);const ev=STATE.event;imgCache=await loadAllImgs(STATE.eventId,ev.totalWorks);showLoad(false);inputIdx=ev.works.findIndex(w=>!isWritten(w));if(inputIdx<0)inputIdx=0;renderInput();}function renderInput(){const ev=STATE.event;const n=ev.totalWorks;const w=ev.works[inputIdx]||{imgs:[],text:"",org:"",author:""};const imgs=imgCache[inputIdx]||[];const doneCount=ev.works.filter(isWritten).length;screen.innerHTML='<div class="card"><div class="stepper"><span class="chip cur">Voice 입력</span><span class="chip">'+doneCount+'/'+n+'</span></div><h2>Voice '+(inputIdx+1)+' <span style="color:var(--gray);font-size:15px">/ '+n+'</span></h2><div class="pbar"><i style="width:'+(inputIdx/n*100)+'%"></i></div><label class="fl">이미지 (최대 2개)</label><p class="sub" style="font-size:13px;margin:0 0 10px">파일 업로드 또는 Ctrl+V로 붙여넣기</p><div class="img-row"><div class="uploader" id="uploader1" onclick="document.getElementById(\'imgInput1\').click()" ondrop="window.__handleDrop(event,1)" ondragover="event.preventDefault()">'+(imgs[0]?'<img src="'+imgs[0]+'"><span class="change-hint">변경</span>':'<div class="up-ic">🖼️</div><div class="up-t">이미지 1</div><div class="up-d">클릭 또는 붙여넣기</div>')+'</div><div class="uploader" id="uploader2" onclick="document.getElementById(\'imgInput2\').click()" ondrop="window.__handleDrop(event,2)" ondragover="event.preventDefault()">'+(imgs[1]?'<img src="'+imgs[1]+'"><span class="change-hint">변경</span>':'<div class="up-ic">🖼️</div><div class="up-t">이미지 2</div><div class="up-d">클릭 또는 붙여넣기</div>')+'</div></div><input type="file" id="imgInput1" accept="image/*" class="hidden"><input type="file" id="imgInput2" accept="image/*" class="hidden"><label class="fl">Voice 제목</label><input type="text" id="wtitle" placeholder="예: 우리 동네 마케팅 아이디어" value="'+esc(w.title||'')+'" maxlength="60"><label class="fl">Voice 글</label><textarea id="wtext" placeholder="Voice 내용을 입력하세요">'+esc(w.text)+'</textarea><label class="fl">작성자 소속</label><input type="text" id="worg" placeholder="예: 영업기획팀" value="'+esc(w.org)+'"><label class="fl">작성자 이름</label><input type="text" id="wauthor" placeholder="예: 유일한" value="'+esc(w.author)+'"><div class="btn-row"><button class="btn btn-ghost" onclick="window.__inputMove(-1)" '+(inputIdx===0?"disabled":"")+">← 이전</button><button class="btn btn-green" onclick="window.__saveWork("+(inputIdx<n-1?1:0)+")">"+(inputIdx<n-1?"저장 후 다음 →":"저장하고 마치기 ✓")+"</button></div><div class="dots">"+ev.works.map((x,i)=>'<i class="'+(i===inputIdx?'cur':(isWritten(x)?'done':''))+'" title="Voice'+(i+1)+'"></i>').join("")+'</div><button class="btn btn-ghost btn-sm" style="margin-top:16px" onclick="window.__hub()">허브로 돌아가기</button></div>';document.addEventListener("paste",e=>window.__handlePaste(e));$("#imgInput1").addEventListener("change",e=>window.__handleImg(e,1));$("#imgInput2").addEventListener("change",e=>window.__handleImg(e,2));}let pendingImgs=[null,null];async function handleImg(e,idx){const file=e.target.files[0];if(!file)return;const reader=new FileReader();reader.onload=ev=>{const img=new Image();img.onload=()=>{const max=600;let {width,height}=img;if(width>max){height=Math.round(height*max/width);width=max;}const cv=document.createElement("canvas");cv.width=width;cv.height=height;cv.getContext("2d").drawImage(img,0,0,width,height);pendingImgs[idx-1]=cv.toDataURL("image/jpeg",0.6);const uploader=document.getElementById("uploader"+idx);uploader.innerHTML='<img src="'+pendingImgs[idx-1]+'"><span class="change-hint">변경</span>';};img.src=ev.target.result;};reader.readAsDataURL(file);}async function handlePaste(e){const items=e.clipboardData?.items;if(!items)return;for(let item of items){if(item.type.startsWith("image/")){e.preventDefault();const file=item.getAsFile();const reader=new FileReader();reader.onload=ev=>{const img=new Image();img.onload=()=>{let idx=!pendingImgs[0]?1:(!pendingImgs[1]?2:1);const max=600;let {width,height}=img;if(width>max){height=Math.round(height*max/width);width=max;}const cv=document.createElement("canvas");cv.width=width;cv.height=height;cv.getContext("2d").drawImage(img,0,0,width,height);pendingImgs[idx-1]=cv.toDataURL("image/jpeg",0.6);const uploader=document.getElementById("uploader"+idx);uploader.innerHTML='<img src="'+pendingImgs[idx-1]+'"><span class="change-hint">변경</span>';};img.src=ev.target.result;};reader.readAsDataURL(file);break;}}}async function handleDrop(e,idx){e.preventDefault();const items=e.dataTransfer?.items;if(!items)return;for(let item of items){if(item.type.startsWith("image/")){const file=item.getAsFile();const reader=new FileReader();reader.onload=ev=>{const img=new Image();img.onload=()=>{const max=600;let {width,height}=img;if(width>max){height=Math.round(height*max/width);width=max;}const cv=document.createElement("canvas");cv.width=width;cv.height=height;cv.getContext("2d").drawImage(img,0,0,width,height);pendingImgs[idx-1]=cv.toDataURL("image/jpeg",0.6);const uploader=document.getElementById("uploader"+idx);uploader.innerHTML='<img src="'+pendingImgs[idx-1]+'"><span class="change-hint">변경</span>';};img.src=ev.target.result;};reader.readAsDataURL(file);break;}}}async function saveWork(goNext){const text=$("#wtext").value.trim();const title=$("#wtitle").value.trim();if(!text&&!pendingImgs[0]&&!pendingImgs[1]&&!title)return toast("제목·이미지·글 중 하나는 입력하세요");showLoad(true);try{if(pendingImgs[0])await saveImg(STATE.eventId,inputIdx,1,pendingImgs[0]);if(pendingImgs[1])await saveImg(STATE.eventId,inputIdx,2,pendingImgs[1]);const works=[...STATE.event.works];works[inputIdx]={imgs:pendingImgs.filter(x=>x),title,text,org:$("#worg").value.trim(),author:$("#wauthor").value.trim()};await evRef(STATE.eventId).update({works});STATE.event.works=works;pendingImgs=[null,null];showLoad(false);if(goNext&&inputIdx<STATE.event.totalWorks-1){inputIdx++;renderInput();toast("저장됨 ✓");}else{toast("모든 Voice 저장 완료 ✓");enterHub();}}catch(e){showLoad(false);toast("저장 실패: "+e.message);}}function inputMove(d){inputIdx=Math.max(0,Math.min(STATE.event.totalWorks-1,inputIdx+d));renderInput();}function goJudge(){STATE.event=STATE.event||{};const ev=STATE.event;const written=ev.works?.filter(isWritten).length||0;if(written===0){toast("먼저 Voice를 입력하세요");return;}screen.innerHTML='<div class="card"><h1>심사 방식을 선택하세요</h1><div class="choice"><button class="choice-btn" onclick="window.__goInstantJudge()"><div class="choice-ic">⚡</div><div><div class="t">즉석 심사하기</div><div class="d">진행자가 실시간으로 진행</div></div></button><button class="choice-btn" onclick="window.__goDeepJudge()"><div class="choice-ic">🎯</div><div><div class="t">진중히 심사하기</div><div class="d">자유로운 속도로 진행</div></div></button></div><button class="btn btn-ghost" style="margin-top:14px" onclick="window.__hub()">뒤로</button></div>';}async function goInstantJudge(){STATE.event=await loadEvent(STATE.eventId);const ev=STATE.event;if(!ev.works.filter(isWritten).length){toast("먼저 Voice를 입력하세요");return;}screen.innerHTML='<div class="card"><h1>심사자 인원</h1><label class="fl">심사자 수</label><input type="number" id="jcount" min="1" max="50" value="2"><div class="btn-row"><button class="btn btn-ghost" onclick="window.__goJudge()">뒤로</button><button class="btn btn-green" onclick="window.__startInstantJudge()">QR 생성 →</button></div></div>';}async function startInstantJudge(){const j=parseInt($("#jcount").value);if(!j||j<1||j>50)return toast("1~50 사이로 입력");showLoad(true);await evRef(STATE.eventId).update({judges:j,phase:"judging",currentWork:0,assignedCount:0});STATE.event=await loadEvent(STATE.eventId);showLoad(false);showInstantQR();}function instantJudgeUrl(){return baseUrl+"?ev="+STATE.eventId+"&role=judge";}function showInstantQR(){const ev=STATE.event;screen.innerHTML='<div class="card qr-wrap"><h1>심사자 '+ev.judges+'명 QR 입장</h1><div class="qr-box" id="qrcode"></div><div class="qr-url">'+instantJudgeUrl()+'</div><div class="btn-row"><button class="btn btn-ghost" onclick="window.__hub()">허브</button><button class="btn btn-green" onclick="window.__hostInstantScreen()">진행 화면 →</button></div></div>';new QRCode($("#qrcode"),{text:instantJudgeUrl(),width:210,height:210,colorDark:"#155c39",colorLight:"#ffffff"});}function hostInstantScreen(){if(STATE.unsub)STATE.unsub();STATE.unsub=evRef(STATE.eventId).onSnapshot(snap=>{if(!snap.exists())return;STATE.event=snap.data();renderHostInstant();});}function renderHostInstant(){const ev=STATE.event;const cur=ev.currentWork;const w=ev.works[cur];if(w&&w.imgs){if(!imgCache[cur]){imgCache[cur]=[];w.imgs.forEach((img,i)=>{loadImg(STATE.eventId,cur,i+1).then(d=>{if(d)imgCache[cur][i]=d;});});}}const curImgs=imgCache[cur]||[];const sc=ev.scores&&ev.scores[cur]||{};let done=0;for(let n=1;n<=ev.judges;n++){if(sc[n])done++;}screen.innerHTML='<div class="card"><h2>Voice '+(cur+1)+' / '+ev.totalWorks+'</h2><div class="judge-imgs">'+curImgs.map(img=>'<img class="judge-img" src="'+img+'" style="display:block">').join("")+'</div><h3 style="text-align:center">'+esc(w&&w.title||"제목 없음")+'</h3><div class="counter-big">'+done+'<small> / '+ev.judges+' 명</small></div><div class="pbar"><i style="width:'+(ev.judges?done/ev.judges*100:0)+'%"></i></div><div class="btn-row"><button class="btn btn-ghost" onclick="window.__hostInstantMove(-1)" '+(cur===0?"disabled":"")+">← 이전</button>"+(cur<ev.totalWorks-1?'<button class="btn btn-green" onclick="window.__hostInstantMove(1)">다음 →</button>':'<button class="btn btn-red" onclick="window.__finishInstantJudge()">종료 🏆</button>')+"</div><button class="btn btn-ghost btn-sm" style="margin-top:14px" onclick="window.__hub()">허브</button></div>";}async function hostInstantMove(d){const ev=STATE.event;let nx=ev.currentWork+d;nx=Math.max(0,Math.min(ev.totalWorks-1,nx));await evRef(STATE.eventId).update({currentWork:nx});}async function finishInstantJudge(){await evRef(STATE.eventId).update({phase:"done"});if(STATE.unsub)STATE.unsub();goResult();}async function joinAsJudge(eventId){if(!guardFb())return;showLoad(true);const ev=await loadEvent(eventId);if(!ev){showLoad(false);screen.innerHTML='<div class="card center"><div class="big-emoji">😵</div><h2>이벤트 없음</h2></div>';return;}const remembered=recallJudge(eventId);if(remembered){showLoad(false);startInstantJudgeWatch(eventId,parseInt(remembered));return;}try{const assigned=await db.runTransaction(async tx=>{const snap=await tx.get(evRef(eventId));if(!snap.exists())throw new Error("없음");const d=snap.data();const used=d.assignedCount||0;const next=used+1;if(next>d.judges)return-1;tx.update(evRef(eventId),{assignedCount:next});return next;});showLoad(false);if(assigned===-1){screen.innerHTML='<div class="card center"><div class="big-emoji">🙅</div><h1>정원 가득</h1></div>';return;}rememberJudge(eventId,assigned);screen.innerHTML='<div class="card center"><div class="big-emoji">🎫</div><h1>심사자 '+assigned+'번</h1><p class="sub">배정되었습니다</p><button class="btn btn-green" onclick="window.__startInstantJudgeWatch('+assigned+')">대기 →</button></div>';}catch(e){showLoad(false);}}function startInstantJudgeWatch(assigned){if(!assigned)assigned=recallJudge(STATE.eventId);STATE.eventId=params.get("ev");if(STATE.unsub)STATE.unsub();STATE.unsub=evRef(STATE.eventId).onSnapshot(snap=>{if(!snap.exists())return;STATE.event=snap.data();renderInstantJudge();});}function renderInstantJudge(){const ev=STATE.event;const judgeNo=recallJudge(STATE.eventId);if(ev.phase==="done"){screen.innerHTML='<div class="card center"><div class="big-emoji">🎉</div><h1>종료됨</h1></div>';return;}const cur=ev.currentWork;const w=ev.works[cur];const sc=ev.scores&&ev.scores[cur]&&ev.scores[cur][judgeNo]||null;myScores=sc?{...sc}:{};if(!isWritten(w)){screen.innerHTML='<div class="card center"><div class="big-emoji">⏳</div><h2>기다리는 중</h2></div>';return;}if(sc){screen.innerHTML='<div class="card center"><div class="big-emoji">✅</div><h1>완료됨</h1><button class="btn btn-ghost btn-sm" onclick="window.__editScore()">수정</button></div>';return;}paintInstantJudgeForm(w,cur,judgeNo);}let myScores={};function paintInstantJudgeForm(w,cur,judgeNo){const ev=STATE.event;if(w.imgs&&!imgCache[cur]){imgCache[cur]=[];w.imgs.forEach((img,i)=>{loadImg(STATE.eventId,cur,i+1).then(d=>{if(d)imgCache[cur][i]=d;});});}const curImgs=imgCache[cur]||[];screen.innerHTML='<div class="card"><div class="judge-imgs">'+curImgs.map(img=>'<img class="judge-img" src="'+img+'">').join("")+'</div><h2 style="text-align:center">'+esc(w.title||"제목")+'</h2><div class="crit" id="crit">'+getCriteria().map(c=>'<div class="crit-row"><div class="crit-head"><span class="crit-name">'+c.name+'</span><span class="crit-val" id="v_'+c.key+'">-<b>/10</b></span></div><div class="scale" data-key="'+c.key+'">'+Array.from({length:10},(_,i)=>'<button data-v="'+(i+1)+'" onclick="window.__pick(\''+c.key+"',"+i+1+')">'+i+1+'</button>').join("")+'</div></div>').join("")+'</div><button class="btn btn-green" style="margin-top:18px" onclick="window.__submitScore('+cur+','+judgeNo+')">제출 ✓</button></div>';Object.keys(myScores).forEach(k=>pick(k,myScores[k],true));}function pick(key,v){myScores[key]=v;const row=document.querySelector('.scale[data-key="'+key+'"]');if(row){[...row.children].forEach(b=>{const bv=+b.dataset.v;b.classList.toggle("on",bv<=v);});}const vEl=$("#v_"+key);if(vEl)vEl.innerHTML=v+'<b>/10</b>';}async function submitScore(cur,judgeNo){for(const c of getCriteria()){if(!myScores[c.key])return toast(c.name+' 미선택');}showLoad(true);try{const ev=await loadEvent(STATE.eventId);const scores=ev.scores||{};if(!scores[cur])scores[cur]={};scores[cur][judgeNo]={...myScores,t:Date.now()};await evRef(STATE.eventId).update({scores});showLoad(false);toast("제출됨 ✓");}catch(e){showLoad(false);toast("실패");}}function editScore(){const ev=STATE.event;const judgeNo=recallJudge(STATE.eventId);const cur=ev.currentWork;myScores={...ev.scores[cur][judgeNo]||{}};paintInstantJudgeForm(ev.works[cur],cur,judgeNo);}async function goDeepJudge(){STATE.event=await loadEvent(STATE.eventId);screen.innerHTML='<div class="card"><h1>진중히 심사</h1><label class="fl">심사자 수</label><input type="number" id="deejcount" min="1" max="50" value="2"><div class="btn-row"><button class="btn btn-ghost" onclick="window.__goJudge()">뒤로</button><button class="btn btn-green" onclick="window.__startDeepJudge()">QR 생성 →</button></div></div>';}async function startDeepJudge(){const j=parseInt($("#deejcount").value);if(!j||j<1||j>50)return toast("오류");showLoad(true);const deepScores={};STATE.event.works.forEach((_,i)=>{deepScores[i]={};});await evRef(STATE.eventId).update({phase:"deepjudging",deepScores,deepJudgeCount:0});STATE.event=await loadEvent(STATE.eventId);showLoad(false);showDeepQR();}function deepJudgeUrl(){return baseUrl+"?ev="+STATE.eventId+"&role=judge&type=deep";}function showDeepQR(){screen.innerHTML='<div class="card qr-wrap"><h1>진중히 심사 QR</h1><div class="qr-box" id="qrcode2"></div><div class="qr-url">'+deepJudgeUrl()+'</div><div class="btn-row"><button class="btn btn-ghost" onclick="window.__hub()">허브</button><button class="btn btn-green" onclick="window.__hostDeepDashboard()">대시보드 →</button></div></div>';new QRCode($("#qrcode2"),{text:deepJudgeUrl(),width:210,height:210,colorDark:"#155c39",colorLight:"#ffffff"});}function hostDeepDashboard(){if(STATE.unsub)STATE.unsub();STATE.unsub=evRef(STATE.eventId).onSnapshot(snap=>{if(!snap.exists())return;STATE.event=snap.data();renderDeepDashboard();});}function renderDeepDashboard(){const ev=STATE.event;const deepScores=ev.deepScores||{};const judgeStats={};Object.keys(deepScores).forEach(vIdx=>{Object.keys(deepScores[vIdx]).forEach(jId=>{if(!judgeStats[jId])judgeStats[jId]={completed:0,total:ev.totalWorks};judgeStats[jId].completed++;});});const statusItems=Object.entries(judgeStats).map(([jId,stats]=>'<div class="judge-status-item"><div class="judge-status-name">심사자 '+jId+'</div><div class="judge-progress"><div class="judge-progress-bar"><div class="fill" style="width:'+stats.completed/stats.total*100+'%">'+stats.completed+'/'+stats.total+'</div></div></div></div>').join("");screen.innerHTML='<div class="card"><h1>진행상황</h1><div class="judge-status-grid">'+statusItems+'</div><div class="btn-row"><button class="btn btn-ghost" onclick="location.reload()">새로고침</button><button class="btn btn-green" onclick="window.__finishDeepJudge()">종료 🏆</button></div><button class="btn btn-ghost btn-sm" style="margin-top:14px" onclick="window.__hub()">허브</button></div>';}async function finishDeepJudge(){await evRef(STATE.eventId).update({phase:"done"});if(STATE.unsub)STATE.unsub();goResult();}async function joinAsDeepJudge(eventId){if(!guardFb())return;showLoad(true);const ev=await loadEvent(eventId);if(!ev){showLoad(false);return;}const remembered=recallJudge(eventId);if(remembered){showLoad(false);startDeepJudgeScreen(eventId,parseInt(remembered));return;}try{const assigned=await db.runTransaction(async tx=>{const snap=await tx.get(evRef(eventId));if(!snap.exists())throw new Error("없음");const d=snap.data();const used=d.deepJudgeCount||0;const next=used+1;tx.update(evRef(eventId),{deepJudgeCount:next});return next;});showLoad(false);rememberJudge(eventId,assigned);screen.innerHTML='<div class="card center"><div class="big-emoji">🎫</div><h1>심사자 '+assigned+'번</h1><button class="btn btn-green" onclick="window.__startDeepJudgeScreen('+assigned+')">시작 →</button></div>';}catch(e){showLoad(false);}}function startDeepJudgeScreen(assigned){STATE.eventId=params.get("ev");if(STATE.unsub)STATE.unsub();STATE.unsub=evRef(STATE.eventId).onSnapshot(snap=>{if(!snap.exists())return;STATE.event=snap.data();renderDeepJudgeHome(assigned);});}function renderDeepJudgeHome(judgeNo){const ev=STATE.event;const deepScores=ev.deepScores||{};const completed=Object.keys(deepScores).filter(vIdx=>deepScores[vIdx][judgeNo]).length;screen.innerHTML='<div class="card"><h1>Voice 선택</h1><div class="counter-big">'+completed+' <small>/ '+ev.totalWorks+'</small></div><div class="pbar"><i style="width:'+completed/ev.totalWorks*100+'%"></i></div><div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(80px,1fr));gap:10px;margin:20px 0;">'+ev.works.map((w,i)=>{const done=deepScores[i]&&deepScores[i][judgeNo];return'<button class="btn '+(done?'btn-green':'btn-yellow')+'" onclick="window.__deepJudgeVoice('+i+','+judgeNo+')" style="height:60px">'+i+1+(done?' ✓':'')+'</button>';}).join("")+'</div><button class="btn btn-ghost btn-sm" style="margin-top:14px" onclick="window.__home()">← 홈</button></div>';}async function deepJudgeVoice(vIdx,judgeNo){STATE.eventId=params.get("ev");STATE.event=await loadEvent(STATE.eventId);const w=STATE.event.works[vIdx];if(!isWritten(w)){toast("미입력");return;}if(!imgCache[vIdx]){imgCache[vIdx]=[];if(w.imgs){w.imgs.forEach((img,i)=>{loadImg(STATE.eventId,vIdx,i+1).then(d=>{if(d)imgCache[vIdx][i]=d;});});}}}function paintDeepJudgeForm(vIdx,judgeNo){const w=STATE.event.works[vIdx];const curImgs=imgCache[vIdx]||[];const deepScores=STATE.event.deepScores||{};myScores=deepScores[vIdx]&&deepScores[vIdx][judgeNo]?{...deepScores[vIdx][judgeNo]}:{};screen.innerHTML='<div class="card"><div class="judge-imgs">'+curImgs.map(img=>'<img class="judge-img" src="'+img+'">').join("")+'</div><h2 style="text-align:center">'+esc(w.title||"제목")+'</h2><div class="crit">'+getCriteria().map(c=>'<div class="crit-row"><div class="crit-head"><span class="crit-name">'+c.name+'</span><span class="crit-val" id="v_'+c.key+'">-<b>/10</b></span></div><div class="scale" data-key="'+c.key+'">'+Array.from({length:10},(_,i)=>'<button data-v="'+(i+1)+'" onclick="window.__pick(\''+c.key+"',"+i+1+')">'+i+1+'</button>').join("")+'</div></div>').join("")+'</div><div class="btn-row"><button class="btn btn-ghost" onclick="window.__deepJudgeHome('+judgeNo+')">← 돌아가기</button><button class="btn btn-green" onclick="window.__submitDeepScore('+vIdx+','+judgeNo+')">제출 ✓</button></div></div>';Object.keys(myScores).forEach(k=>pick(k,myScores[k],true));}function deepJudgeHome(judgeNo){renderDeepJudgeHome(judgeNo);}async function submitDeepScore(vIdx,judgeNo){for(const c of getCriteria()){if(!myScores[c.key])return toast("미선택");}showLoad(true);try{const ev=await loadEvent(STATE.eventId);const deepScores=ev.deepScores||{};if(!deepScores[vIdx])deepScores[vIdx]={};deepScores[vIdx][judgeNo]={...myScores,t:Date.now()};await evRef(STATE.eventId).update({deepScores});showLoad(false);toast("제출됨 ✓");renderDeepJudgeHome(judgeNo);}catch(e){showLoad(false);toast("실패");}}async function goResult(){showLoad(true);STATE.event=await loadEvent(STATE.eventId);const ev=STATE.event;imgCache=await loadAllImgs(STATE.eventId,ev.totalWorks);showLoad(false);const rows=[];ev.works.forEach((w,i)=>{if(!isWritten(w))return;let total=0,judged=0;const allScores={...(ev.scores&&ev.scores[i]||{}),...(ev.deepScores&&ev.deepScores[i]||{})};Object.values(allScores).forEach(js=>{judged++;getCriteria().forEach(c=>total+=(js[c.key]||0));});rows.push({i,w,total,judged});});rows.sort((a,b)=>b.total-a.total);$("#evTag").classList.remove("hidden");const medal=r=>r===0?'m1':r===1?'m2':r===2?'m3':'mx';const cls=r=>r===0?'top1':r===1?'top2':r===2?'top3':'';const rowHtml=(r,rk)=>'<div class="rank '+cls(rk)+'"><div class="medal '+medal(rk)+'">'+(rk<3?['🥇','🥈','🥉'][rk]:rk+1)+'</div><div class="rank-imgs">'+(imgCache[r.i]||[]).map(img=>'<img src="'+img+'">').join("")+'</div><div class="rank-info"><div class="nm">'+esc(r.w.title||"Voice "+(r.i+1))+'</div><div class="who">'+esc(r.w.author||"미입력")+'</div></div><div class="rank-score">'+r.total+'<small>'+r.judged+'명</small></div></div>';const top=rows.slice(0,5).map((r,i)=>rowHtml(r,i)).join("");const rest=rows.slice(5);screen.innerHTML='<div class="card"><h1>🏆 최종 순위</h1>'+top+(rest.length?'<button class="btn btn-ghost" id="moreBtn" style="margin-top:8px" onclick="document.getElementById(\'restBox\').classList.toggle(\'hidden\');this.textContent=document.getElementById(\'restBox\').classList.contains(\'hidden\')?\'6위 보기 ▾\':\'접기 ▴\'">6위 보기 ▾</button><div id="restBox" class="hidden" style="margin-top:12px">'+rest.map((r,i)=>rowHtml(r,i+5)).join("")+'</div>':'')+'<div class="btn-row"><button class="btn btn-ghost" onclick="window.__hub()">허브</button><button class="btn btn-green" onclick="window.__home()">홈</button></div></div>';}let adminUnlocked=false;function adminGate(){if(!guardFb())return;if(adminUnlocked){adminPanel();return;}screen.innerHTML='<div class="card"><h1>관리자</h1><label class="fl">비밀번호</label><input type="password" id="masterPw"><div class="btn-row"><button class="btn btn-ghost" onclick="window.__home()">뒤로</button><button class="btn btn-dark" onclick="window.__adminUnlock()">입장</button></div></div>';}function adminUnlock(){const pw=$("#masterPw").value;if(pw!==_master())return toast("틀림");adminUnlocked=true;adminPanel();}async function adminPanel(){$("#evTag").classList.add("hidden");showLoad(true);let items=[];try{const snap=await db.collection("events").get();snap.forEach(d=>{const v=d.data();items.push({id:d.id,name:v.name,n:v.totalWorks});});}catch(e){}showLoad(false);items.reverse();screen.innerHTML='<div class="card"><h1>전체 이벤트</h1><p class="sub">총 '+items.length+'개</p>'+(items.length?items.map(it=>'<div class="rank" style="border-color:var(--line)"><div class="rank-info"><div class="nm">'+esc(it.name)+'</div><div class="who">'+it.id+' · '+it.n+'개</div></div><button class="btn btn-red btn-sm" onclick="window.__adminDelete(\''+it.id+'\',\''+esc(it.name).replace(/'/g,"")+'\')">삭제</button></div>').join(''):'<p class="sub">없음</p>')+'<button class="btn btn-ghost" style="margin-top:14px" onclick="window.__home()">← 홈</button></div>';}async function adminDelete(id,name){if(!confirm("삭제할까?"))return;showLoad(true);try{await evRef(id).delete();showLoad(false);toast("삭제됨");adminPanel();}catch(e){showLoad(false);}}window.__home=renderHome;window.__newEvent=newEventForm;window.__buildCritInputs=buildCritInputs;window.__createEvent=createEvent;window.__openEvent=openEventForm;window.__doOpen=doOpen;window.__hub=enterHub;window.__goInput=goInput;window.__saveWork=saveWork;window.__inputMove=inputMove;window.__handleImg=handleImg;window.__handlePaste=handlePaste;window.__handleDrop=handleDrop;window.__goJudge=goJudge;window.__goInstantJudge=goInstantJudge;window.__startInstantJudge=startInstantJudge;window.__hostInstantScreen=hostInstantScreen;window.__hostInstantMove=hostInstantMove;window.__finishInstantJudge=finishInstantJudge;window.__startInstantJudgeWatch=startInstantJudgeWatch;window.__pick=pick;window.__submitScore=submitScore;window.__editScore=editScore;window.__goDeepJudge=goDeepJudge;window.__startDeepJudge=startDeepJudge;window.__hostDeepDashboard=hostDeepDashboard;window.__finishDeepJudge=finishDeepJudge;window.__deepJudgeVoice=deepJudgeVoice;window.__deepJudgeHome=deepJudgeHome;window.__submitDeepScore=submitDeepScore;window.__startDeepJudgeScreen=startDeepJudgeScreen;window.__goResult=goResult;window.__admin=adminGate;window.__adminUnlock=adminUnlock;window.__adminDelete=adminDelete;renderHome();</script>
+<div class="app">
+  <div class="topbar">
+    <div class="logo"><span class="dot">★</span> 보이(VOY)는 VOTE</div>
+    <div class="ev-tag" id="evTag"></div>
+  </div>
+  <div id="screen"></div>
+  <div class="foot">Planning and Production by mujjinhwan</div>
+</div>
+
+<script>
+const firebaseConfig = {
+  apiKey: "AIzaSyDIespzZird2IAMIos5TdGtZYxPS5GpmuM",
+  authDomain: "voyisvote.firebaseapp.com",
+  projectId: "voyisvote",
+  storageBucket: "voyisvote.firebasestorage.app",
+  messagingSenderId: "377416597184",
+  appId: "1:377416597184:web:fcbcd92a63df13e7313725"
+};
+
+let db = null;
+try {
+  firebase.initializeApp(firebaseConfig);
+  db = firebase.firestore();
+  console.log("✓ Firebase");
+} catch(e) {
+  console.error("Firebase init", e);
+}
+
+const _mk = ["NjIwMmV0b3", "ZzaXlvdg=="];
+const getMasterPw = () => atob(_mk.join("")).split("").reverse().join("");
+const $ = (s) => document.querySelector(s);
+const screen = document.getElementById("screen");
+
+let state = { eventId: null, event: null };
+
+function showLoad(b) { document.getElementById("loading").classList.toggle("on", b); }
+function toast(msg) { const t = $("#toast"); t.textContent = msg; t.classList.add("on"); setTimeout(() => t.classList.remove("on"), 2200); }
+function esc(s) { return (s + "").replace(/[&<>"]/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c])); }
+
+function renderHome() {
+  document.getElementById("evTag").classList.add("hidden");
+  screen.innerHTML = `
+    <div class="card">
+      <h1>안녕하세요 👋</h1>
+      <p class="sub">공모전 Voice를 등록하고, QR로 심사자들의 점수를 모아 순위를 매기는 시스템입니다.</p>
+      <div class="choice">
+        <button class="choice-btn" onclick="newEventForm()">
+          <div class="choice-ic">✨</div>
+          <div>
+            <div class="t">새 이벤트 만들기</div>
+            <div class="d">이벤트 이름과 4자리 비밀번호를 정합니다</div>
+          </div>
+        </button>
+        <button class="choice-btn" onclick="openEventForm()">
+          <div class="choice-ic">📂</div>
+          <div>
+            <div class="t">기존 이벤트 열기</div>
+            <div class="d">전에 만든 이벤트를 이어서 진행/결과 확인</div>
+          </div>
+        </button>
+      </div>
+      <button class="btn btn-ghost btn-sm" style="margin-top:16px;width:100%;opacity:.7" onclick="adminGate()">🔒 관리자 모드</button>
+    </div>
+  `;
+}
+
+function newEventForm() {
+  screen.innerHTML = `
+    <div class="card">
+      <h1>새 이벤트 만들기</h1>
+      <p class="sub">이벤트 이름과 비밀번호를 정합니다.</p>
+      <label>이벤트 이름</label>
+      <input type="text" id="evName" placeholder="예: 2026 상반기 공모전" maxlength="40">
+      <label>작성 주체자 이름</label>
+      <input type="text" id="evOwner" placeholder="예: 유일한" maxlength="30">
+      <label>4자리 비밀번호</label>
+      <input type="password" id="evPw" inputmode="numeric" maxlength="4" placeholder="● ● ● ●">
+      <label>Voice 개수</label>
+      <input type="number" id="voiceCount" min="1" max="100" value="5" inputmode="numeric">
+      <div class="btn-row">
+        <button class="btn btn-ghost" onclick="renderHome()">뒤로</button>
+        <button class="btn btn-green" onclick="createEvent()">만들기 →</button>
+      </div>
+    </div>
+  `;
+}
+
+async function createEvent() {
+  const name = $("#evName").value.trim();
+  const owner = $("#evOwner").value.trim();
+  const pw = $("#evPw").value.trim();
+  const voiceCount = parseInt($("#voiceCount").value);
+
+  if (name.length < 2) return toast("이벤트 이름을 입력하세요");
+  if (owner.length < 1) return toast("작성 주체자 이름을 입력하세요");
+  if (!/^\d{4}$/.test(pw)) return toast("비밀번호는 숫자 4자리");
+  if (!voiceCount || voiceCount < 1 || voiceCount > 100) return toast("Voice는 1~100개");
+
+  showLoad(true);
+  try {
+    const id = "ev_" + Date.now().toString(36);
+    const works = Array.from({length: voiceCount}, () => ({imgs: [], title: "", text: "", org: "", author: ""}));
+    
+    await db.collection("events").doc(id).set({
+      name, owner, pw, totalWorks: voiceCount, works, phase: "input", judges: 0, currentWork: 0, scores: {}, deepScores: {}
+    });
+
+    state.eventId = id;
+    showLoad(false);
+    enterHub();
+  } catch(e) {
+    showLoad(false);
+    toast("생성 실패");
+  }
+}
+
+function openEventForm() {
+  screen.innerHTML = `
+    <div class="card">
+      <h1>기존 이벤트 열기</h1>
+      <label>이벤트 ID</label>
+      <input type="text" id="openId" placeholder="ev_xxxxx">
+      <label>비밀번호</label>
+      <input type="password" id="openPw" inputmode="numeric" maxlength="4" placeholder="● ● ● ●">
+      <div class="btn-row">
+        <button class="btn btn-ghost" onclick="renderHome()">뒤로</button>
+        <button class="btn btn-green" onclick="doOpen()">열기 →</button>
+      </div>
+    </div>
+  `;
+}
+
+async function doOpen() {
+  const id = $("#openId").value.trim();
+  const pw = $("#openPw").value.trim();
+
+  if (!id) return toast("이벤트 ID를 입력하세요");
+
+  showLoad(true);
+  const doc = await db.collection("events").doc(id).get();
+  showLoad(false);
+
+  if (!doc.exists) return toast("이벤트를 찾을 수 없습니다");
+  if (doc.data().pw !== pw) return toast("비밀번호가 틀립니다");
+
+  state.eventId = id;
+  enterHub();
+}
+
+async function enterHub() {
+  showLoad(true);
+  const doc = await db.collection("events").doc(state.eventId).get();
+  state.event = doc.data();
+  showLoad(false);
+
+  const ev = state.event;
+  document.getElementById("evTag").classList.remove("hidden");
+  document.getElementById("evTag").textContent = "📋 " + ev.name;
+
+  screen.innerHTML = `
+    <div class="card">
+      <h1>${esc(ev.name)}</h1>
+      <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:12px;">
+        <div style="border:2px solid var(--line);border-radius:18px;background:#fff;padding:22px 16px;text-align:center;cursor:pointer;" onclick="goInput()">
+          <div style="font-size:30px;margin-bottom:10px;">📝</div>
+          <div style="font-weight:900;font-size:16px;">Voice 입력</div>
+          <div style="color:var(--gray);font-size:12px;margin-top:5px;">현재 ${ev.totalWorks}개 등록</div>
+        </div>
+        <div style="border:2px solid var(--line);border-radius:18px;background:#fff;padding:22px 16px;text-align:center;cursor:pointer;" onclick="goJudge()">
+          <div style="font-size:30px;margin-bottom:10px;">📱</div>
+          <div style="font-weight:900;font-size:16px;">심사 시작</div>
+          <div style="color:var(--gray);font-size:12px;margin-top:5px;">방식선택</div>
+        </div>
+        <div style="border:2px solid var(--line);border-radius:18px;background:#fff;padding:22px 16px;text-align:center;cursor:pointer;" onclick="goResult()">
+          <div style="font-size:30px;margin-bottom:10px;">🏆</div>
+          <div style="font-weight:900;font-size:16px;">결과 보기</div>
+          <div style="color:var(--gray);font-size:12px;margin-top:5px;">최종 순위</div>
+        </div>
+      </div>
+      <button class="btn btn-ghost" style="margin-top:8px" onclick="renderHome()">← 홈으로</button>
+    </div>
+  `;
+}
+
+let inputIdx = 0;
+
+async function goInput() {
+  showLoad(true);
+  const doc = await db.collection("events").doc(state.eventId).get();
+  state.event = doc.data();
+  showLoad(false);
+  inputIdx = 0;
+  renderInput();
+}
+
+function renderInput() {
+  const ev = state.event;
+  const w = ev.works[inputIdx] || {imgs: [], title: "", text: "", org: "", author: ""};
+  const doneCount = ev.works.filter(x => x.text || x.title).length;
+
+  screen.innerHTML = `
+    <div class="card">
+      <h2>Voice ${inputIdx + 1} / ${ev.totalWorks}</h2>
+      <div style="height:9px;background:var(--green-soft);border-radius:99px;margin:6px 0 4px;overflow:hidden;">
+        <div style="display:block;height:100%;background:linear-gradient(90deg,var(--yellow),var(--green));width:${(inputIdx)/ev.totalWorks*100}%;"></div>
+      </div>
+      <label>Voice 제목</label>
+      <input type="text" id="wtitle" value="${esc(w.title)}" maxlength="60">
+      <label>Voice 글</label>
+      <textarea id="wtext">${esc(w.text)}</textarea>
+      <label>작성자 소속</label>
+      <input type="text" id="worg" value="${esc(w.org)}">
+      <label>작성자 이름</label>
+      <input type="text" id="wauthor" value="${esc(w.author)}">
+      <div class="btn-row">
+        <button class="btn btn-ghost" onclick="inputMove(-1)" ${inputIdx === 0 ? "disabled" : ""}>← 이전</button>
+        <button class="btn btn-green" onclick="saveWork(${inputIdx < ev.totalWorks - 1 ? 1 : 0})">${inputIdx < ev.totalWorks - 1 ? "저장 후 다음 →" : "저장하고 마치기 ✓"}</button>
+      </div>
+      <button class="btn btn-ghost btn-sm" style="margin-top:16px" onclick="enterHub()">허브로 돌아가기</button>
+    </div>
+  `;
+}
+
+function inputMove(d) {
+  inputIdx = Math.max(0, Math.min(state.event.totalWorks - 1, inputIdx + d));
+  renderInput();
+}
+
+async function saveWork(goNext) {
+  const text = $("#wtext").value.trim();
+  const title = $("#wtitle").value.trim();
+  if (!text && !title) return toast("제목 또는 글을 입력하세요");
+
+  showLoad(true);
+  try {
+    const works = [...state.event.works];
+    works[inputIdx] = {
+      imgs: works[inputIdx].imgs,
+      title,
+      text,
+      org: $("#worg").value.trim(),
+      author: $("#wauthor").value.trim()
+    };
+    
+    await db.collection("events").doc(state.eventId).update({works});
+    state.event.works = works;
+    showLoad(false);
+
+    if (goNext && inputIdx < state.event.totalWorks - 1) {
+      inputIdx++;
+      renderInput();
+      toast("저장됨");
+    } else {
+      toast("모든 Voice 저장 완료");
+      enterHub();
+    }
+  } catch(e) {
+    showLoad(false);
+    toast("저장 실패");
+  }
+}
+
+function goJudge() {
+  const ev = state.event;
+  const written = ev.works?.filter(x => x.text || x.title).length || 0;
+  
+  if (written === 0) {
+    return toast("먼저 Voice를 입력하세요");
+  }
+
+  screen.innerHTML = `
+    <div class="card">
+      <h1>심사 방식을 선택하세요</h1>
+      <div class="choice">
+        <button class="choice-btn" onclick="goInstantJudge()">
+          <div class="choice-ic">⚡</div>
+          <div>
+            <div class="t">즉석 심사하기</div>
+            <div class="d">진행자가 실시간으로 Voice를 하나씩 진행</div>
+          </div>
+        </button>
+        <button class="choice-btn" onclick="goDeepJudge()">
+          <div class="choice-ic">🎯</div>
+          <div>
+            <div class="t">진중히 심사하기</div>
+            <div class="d">심사위원들이 자유로운 속도로 심사 (며칠 후 완료 OK)</div>
+          </div>
+        </button>
+      </div>
+      <button class="btn btn-ghost" style="margin-top:14px" onclick="enterHub()">뒤로</button>
+    </div>
+  `;
+}
+
+async function goInstantJudge() {
+  const ev = state.event;
+  if (!ev.works.filter(x => x.text || x.title).length) {
+    return toast("먼저 Voice를 입력하세요");
+  }
+
+  screen.innerHTML = `
+    <div class="card">
+      <h1>심사자 인원 설정</h1>
+      <label>심사자 수</label>
+      <input type="number" id="jcount" min="1" max="50" value="2" inputmode="numeric">
+      <div class="btn-row">
+        <button class="btn btn-ghost" onclick="goJudge()">뒤로</button>
+        <button class="btn btn-green" onclick="startInstantJudge()">QR 생성 →</button>
+      </div>
+    </div>
+  `;
+}
+
+async function startInstantJudge() {
+  const j = parseInt($("#jcount").value);
+  if (!j || j < 1 || j > 50) return toast("1~50 사이로 입력");
+
+  showLoad(true);
+  await db.collection("events").doc(state.eventId).update({
+    judges: j,
+    phase: "judging",
+    currentWork: 0,
+    assignedCount: 0
+  });
+  showLoad(false);
+  
+  toast("심사 모드 시작!");
+  enterHub();
+}
+
+async function goDeepJudge() {
+  const ev = state.event;
+  if (!ev.works.filter(x => x.text || x.title).length) {
+    return toast("먼저 Voice를 입력하세요");
+  }
+
+  screen.innerHTML = `
+    <div class="card">
+      <h1>진중히 심사하기 설정</h1>
+      <p class="sub">심사위원들이 자유로운 속도로 심사합니다</p>
+      <label>심사위원 수</label>
+      <input type="number" id="deejcount" min="1" max="50" value="2" inputmode="numeric">
+      <div class="btn-row">
+        <button class="btn btn-ghost" onclick="goJudge()">뒤로</button>
+        <button class="btn btn-green" onclick="startDeepJudge()">QR 생성 →</button>
+      </div>
+    </div>
+  `;
+}
+
+async function startDeepJudge() {
+  const j = parseInt($("#deejcount").value);
+  if (!j || j < 1 || j > 50) return toast("1~50 사이로 입력");
+
+  showLoad(true);
+  const deepScores = {};
+  state.event.works.forEach((_, i) => {
+    deepScores[i] = {};
+  });
+
+  await db.collection("events").doc(state.eventId).update({
+    phase: "deepjudging",
+    deepScores,
+    deepJudgeCount: 0
+  });
+
+  const doc = await db.collection("events").doc(state.eventId).get();
+  state.event = doc.data();
+  showLoad(false);
+  showDeepQR();
+}
+
+function showDeepQR() {
+  const params = new URLSearchParams(location.search);
+  const baseUrl = location.origin + location.pathname;
+  const deepUrl = baseUrl + "?ev=" + state.eventId + "&role=judge&type=deep";
+
+  screen.innerHTML = `
+    <div class="card">
+      <h1>진중히 심사 QR</h1>
+      <p class="sub">심사위원들은 아래 QR을 찍어 입장합니다. 자신의 속도대로 심사할 수 있어요.</p>
+      <div style="text-align:center;padding:8px 0;margin:20px 0;">
+        <div id="qrcode2" style="display:inline-block;background:#fff;padding:16px;border-radius:18px;border:2px solid var(--green-line);box-shadow:var(--shadow);"></div>
+      </div>
+      <div style="margin-top:12px;font-size:13px;color:var(--gray);word-break:break-all;background:var(--green-soft);padding:10px 12px;border-radius:10px;">${deepUrl}</div>
+      <div class="btn-row">
+        <button class="btn btn-ghost" onclick="enterHub()">허브</button>
+        <button class="btn btn-green" onclick="hostDeepDashboard()">진행자 대시보드 →</button>
+      </div>
+    </div>
+  `;
+
+  new QRCode(document.getElementById("qrcode2"), {
+    text: deepUrl,
+    width: 210,
+    height: 210,
+    colorDark: "#155c39",
+    colorLight: "#ffffff"
+  });
+}
+
+function hostDeepDashboard() {
+  if (state.unsub) state.unsub();
+
+  state.unsub = db.collection("events").doc(state.eventId).onSnapshot(snap => {
+    if (!snap.exists()) return;
+    state.event = snap.data();
+    renderDeepDashboard();
+  });
+}
+
+function renderDeepDashboard() {
+  const ev = state.event;
+  const deepScores = ev.deepScores || {};
+  const judgeStats = {};
+
+  Object.keys(deepScores).forEach(vIdx => {
+    Object.keys(deepScores[vIdx]).forEach(jId => {
+      if (!judgeStats[jId]) judgeStats[jId] = {completed: 0, total: ev.totalWorks};
+      judgeStats[jId].completed++;
+    });
+  });
+
+  const statusItems = Object.entries(judgeStats).map(([jId, stats]) => `
+    <div style="padding:12px;background:var(--green-soft);border:1px solid var(--green-line);border-radius:12px;">
+      <div style="font-weight:700;font-size:15px;color:var(--green-deep);margin-bottom:6px;">심사위원 ${jId}</div>
+      <div style="display:flex;gap:10px;align-items:center;">
+        <div style="flex:1;height:24px;background:#fff;border:1px solid var(--green-line);border-radius:8px;overflow:hidden;">
+          <div style="height:100%;background:linear-gradient(90deg,var(--yellow),var(--green));width:${stats.completed/stats.total*100}%;display:flex;align-items:center;justify-content:center;color:#fff;font-size:11px;font-weight:700;">${stats.completed}/${stats.total}</div>
+        </div>
+        <div style="min-width:50px;text-align:right;font-weight:700;color:var(--green-deep);">${Math.round(stats.completed/stats.total*100)}%</div>
+      </div>
+    </div>
+  `).join("");
+
+  screen.innerHTML = `
+    <div class="card">
+      <h1>진행자 대시보드</h1>
+      <p class="sub">심사위원들의 완료 상황을 확인할 수 있습니다</p>
+      <div style="display:flex;flex-direction:column;gap:12px;margin:16px 0;">
+        ${statusItems || '<p class="sub" style="text-align:center">아직 심사위원이 접속하지 않았습니다</p>'}
+      </div>
+      <div class="btn-row">
+        <button class="btn btn-ghost" onclick="location.reload()">새로고침 🔄</button>
+        <button class="btn btn-green" onclick="finishDeepJudge()">심사 종료 · 결과 보기 🏆</button>
+      </div>
+      <button class="btn btn-ghost btn-sm" style="margin-top:14px" onclick="enterHub()">허브로</button>
+    </div>
+  `;
+}
+
+async function finishDeepJudge() {
+  if (state.unsub) state.unsub();
+  
+  await db.collection("events").doc(state.eventId).update({
+    phase: "done"
+  });
+
+  const doc = await db.collection("events").doc(state.eventId).get();
+  state.event = doc.data();
+  goResult();
+}
+
+function goResult() {
+  const ev = state.event;
+  const rows = [];
+
+  ev.works.forEach((w, i) => {
+    if (w.text || w.title) {
+      let total = 0, judged = 0;
+      
+      const instantScores = ev.scores && ev.scores[i] ? ev.scores[i] : {};
+      const deepScores = ev.deepScores && ev.deepScores[i] ? ev.deepScores[i] : {};
+      
+      const allScores = {...instantScores, ...deepScores};
+      
+      Object.values(allScores).forEach(score => {
+        if (typeof score === "number") {
+          total += score;
+          judged++;
+        }
+      });
+
+      if (total > 0 || judged > 0) {
+        rows.push({i, w, total, judged});
+      }
+    }
+  });
+
+  rows.sort((a, b) => b.total - a.total);
+
+  screen.innerHTML = `
+    <div class="card">
+      <h1>🏆 최종 순위</h1>
+      ${rows.length ? rows.map((r, rk) => `
+        <div style="display:flex;gap:14px;padding:16px;border-radius:16px;margin-bottom:11px;border:1px solid var(--line);background:${rk === 0 ? "linear-gradient(135deg,#fffdf2,#fff6d0)" : rk === 1 ? "#f7faf8" : "#fbfdfc"};">
+          <div style="font-size:26px;width:46px;height:46px;border-radius:50%;display:grid;place-items:center;flex-shrink:0;color:#fff;font-weight:900;background:${rk === 0 ? "var(--yellow);color:var(--ink)" : rk === 1 ? "#9fb3a8" : "#cd9b6a"};">${rk < 3 ? ["🥇", "🥈", "🥉"][rk] : rk + 1}</div>
+          <div style="flex:1;">
+            <div style="font-weight:900;font-size:15px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">${esc(r.w.title || "Voice " + (r.i + 1))}</div>
+            <div style="font-size:12.5px;color:var(--gray);font-weight:700;margin-top:2px;">${esc(r.w.author || "이름 미입력")}</div>
+          </div>
+          <div style="font-size:24px;font-weight:900;color:var(--green-deep);text-align:right;">
+            ${r.total}<br><small style="font-size:12px;color:var(--gray);display:block;">${r.judged}명</small>
+          </div>
+        </div>
+      `).join("") : "<p class='sub'>아직 점수가 없습니다</p>"}
+      <div class="btn-row">
+        <button class="btn btn-ghost" onclick="enterHub()">허브로</button>
+        <button class="btn btn-green" onclick="renderHome()">홈으로</button>
+      </div>
+    </div>
+  `;
+}
+
+let adminUnlocked = false;
+
+function adminGate() {
+  if (adminUnlocked) {
+    adminPanel();
+    return;
+  }
+
+  screen.innerHTML = `
+    <div class="card">
+      <h1>🔒 관리자 모드</h1>
+      <label>마스터 비밀번호</label>
+      <input type="password" id="masterPw" placeholder="비밀번호">
+      <div class="btn-row">
+        <button class="btn btn-ghost" onclick="renderHome()">뒤로</button>
+        <button class="btn btn-dark" onclick="adminUnlock()">입장 →</button>
+      </div>
+    </div>
+  `;
+}
+
+function adminUnlock() {
+  const pw = $("#masterPw").value;
+  if (pw !== getMasterPw()) return toast("비밀번호가 틀립니다");
+  
+  adminUnlocked = true;
+  adminPanel();
+}
+
+async function adminPanel() {
+  document.getElementById("evTag").classList.add("hidden");
+  showLoad(true);
+
+  let items = [];
+  try {
+    const snap = await db.collection("events").get();
+    snap.forEach(d => {
+      const v = d.data();
+      items.push({id: d.id, name: v.name, n: v.totalWorks});
+    });
+  } catch(e) {}
+
+  showLoad(false);
+  items.reverse();
+
+  screen.innerHTML = `
+    <div class="card">
+      <h1>전체 이벤트 관리</h1>
+      <p class="sub">총 <b>${items.length}</b>개 이벤트</p>
+      ${items.length ? items.map(it => `
+        <div style="display:flex;gap:14px;padding:16px;border:1px solid var(--line);border-radius:16px;margin-bottom:11px;align-items:center;">
+          <div style="flex:1;">
+            <div style="font-weight:900;font-size:15px;">${esc(it.name)}</div>
+            <div style="font-size:12px;color:var(--gray);margin-top:2px;">${it.id} · Voice ${it.n}개</div>
+          </div>
+          <button class="btn btn-red btn-sm" onclick="adminDelete('${it.id}', '${esc(it.name).replace(/'/g, "")}')">삭제</button>
+        </div>
+      `).join("") : "<p class='sub'>이벤트가 없습니다</p>"}
+      <button class="btn btn-ghost" style="margin-top:14px" onclick="renderHome()">← 홈으로</button>
+    </div>
+  `;
+}
+
+async function adminDelete(id, name) {
+  if (!confirm(name + " 이벤트를 삭제할까요?")) return;
+
+  showLoad(true);
+  try {
+    await db.collection("events").doc(id).delete();
+    showLoad(false);
+    toast("삭제됨");
+    adminPanel();
+  } catch(e) {
+    showLoad(false);
+    toast("삭제 실패");
+  }
+}
+
+renderHome();
+
+const params = new URLSearchParams(location.search);
+if (params.get("ev") && params.get("role") === "judge") {
+  showLoad(true);
+  
+  if (params.get("type") === "deep") {
+    joinAsDeepJudge(params.get("ev"));
+  } else {
+    joinAsJudge(params.get("ev"));
+  }
+}
+
+async function joinAsJudge(eventId) {
+  const doc = await db.collection("events").doc(eventId).get();
+  if (!doc.exists) {
+    showLoad(false);
+    screen.innerHTML = '<div class="card"><h1>이벤트 없음</h1></div>';
+    return;
+  }
+
+  state.eventId = eventId;
+  state.event = doc.data();
+
+  if (state.unsub) state.unsub();
+  state.unsub = db.collection("events").doc(eventId).onSnapshot(snap => {
+    if (!snap.exists()) return;
+    state.event = snap.data();
+    renderJudgeScreen();
+  });
+}
+
+function renderJudgeScreen() {
+  const ev = state.event;
+  if (ev.phase !== "judging") {
+    showLoad(false);
+    screen.innerHTML = '<div class="card"><h1>심사가 종료되었습니다</h1></div>';
+    return;
+  }
+
+  showLoad(false);
+
+  const cur = ev.currentWork;
+  const w = ev.works[cur];
+
+  if (!w || (!w.text && !w.title)) {
+    screen.innerHTML = '<div class="card center"><h1>⏳</h1><p class="sub">진행자를 기다리는 중...</p></div>';
+    return;
+  }
+
+  screen.innerHTML = `
+    <div class="card">
+      <h2>Voice ${cur + 1}/${ev.totalWorks}</h2>
+      <p style="font-size:18px;font-weight:700;color:var(--green-deep);">${esc(w.title || "제목 없음")}</p>
+      <textarea readonly style="background:#f5f5f5;color:var(--gray);">${w.text || "(내용 없음)"}</textarea>
+      <label>평가 (1-10)</label>
+      <input type="number" id="myScore" min="1" max="10" placeholder="점수를 입력하세요">
+      <button class="btn btn-green" onclick="submitJudgeScore()">평가 제출 ✓</button>
+    </div>
+  `;
+}
+
+async function submitJudgeScore() {
+  const score = parseInt($("#myScore").value);
+  if (!score || score < 1 || score > 10) return toast("1-10 사이의 점수를 입력하세요");
+
+  showLoad(true);
+  const cur = state.event.currentWork;
+  const judgeId = localStorage.getItem("judgeId_" + state.eventId) || "judge_" + Date.now();
+  
+  localStorage.setItem("judgeId_" + state.eventId, judgeId);
+
+  const scores = state.event.scores || {};
+  if (!scores[cur]) scores[cur] = {};
+  scores[cur][judgeId] = score;
+
+  try {
+    await db.collection("events").doc(state.eventId).update({scores});
+    showLoad(false);
+    toast("제출됨");
+  } catch(e) {
+    showLoad(false);
+    toast("실패");
+  }
+}
+
+async function joinAsDeepJudge(eventId) {
+  const doc = await db.collection("events").doc(eventId).get();
+  if (!doc.exists) {
+    showLoad(false);
+    screen.innerHTML = '<div class="card"><h1>이벤트 없음</h1></div>';
+    return;
+  }
+
+  state.eventId = eventId;
+  state.event = doc.data();
+  
+  const judgeId = "judge_" + Math.random().toString(36).slice(2, 8);
+  localStorage.setItem("judgeId_" + eventId, judgeId);
+
+  showLoad(false);
+  renderDeepJudgeHome();
+}
+
+function renderDeepJudgeHome() {
+  const ev = state.event;
+  const deepScores = ev.deepScores || {};
+  const judgeId = localStorage.getItem("judgeId_" + state.eventId);
+  const completed = Object.keys(deepScores).filter(vIdx => deepScores[vIdx][judgeId]).length;
+
+  screen.innerHTML = `
+    <div class="card">
+      <h1>Voice 선택</h1>
+      <p class="sub">심사할 Voice를 선택하세요</p>
+      <div style="font-size:40px;font-weight:900;color:var(--green-deep);text-align:center;letter-spacing:-1px;margin:16px 0;">
+        ${completed} <small style="font-size:18px;color:var(--gray);">/ ${ev.totalWorks}</small>
+      </div>
+      <div style="height:9px;background:var(--green-soft);border-radius:99px;margin:6px 0 14px;overflow:hidden;">
+        <div style="display:block;height:100%;background:linear-gradient(90deg,var(--yellow),var(--green));width:${completed/ev.totalWorks*100}%;"></div>
+      </div>
+      <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(60px,1fr));gap:10px;margin:20px 0;">
+        ${ev.works.map((w, i) => {
+          const done = deepScores[i] && deepScores[i][judgeId];
+          return `<button class="btn ${done ? "btn-green" : "btn-yellow"}" onclick="deepJudgeVoice(${i})" style="height:50px;font-size:14px;">${i+1}${done ? " ✓" : ""}</button>`;
+        }).join("")}
+      </div>
+      <button class="btn btn-ghost btn-sm" style="margin-top:14px" onclick="renderHome()">← 홈</button>
+    </div>
+  `;
+}
+
+async function deepJudgeVoice(vIdx) {
+  showLoad(true);
+  const doc = await db.collection("events").doc(state.eventId).get();
+  state.event = doc.data();
+  showLoad(false);
+
+  const w = state.event.works[vIdx];
+  if (!w || (!w.text && !w.title)) {
+    return toast("입력되지 않은 Voice입니다");
+  }
+
+  const judgeId = localStorage.getItem("judgeId_" + state.eventId);
+  const deepScores = state.event.deepScores || {};
+  const myScore = deepScores[vIdx] && deepScores[vIdx][judgeId] ? deepScores[vIdx][judgeId] : "";
+
+  screen.innerHTML = `
+    <div class="card">
+      <h2>Voice ${vIdx + 1}/${state.event.totalWorks}</h2>
+      <p style="font-size:18px;font-weight:700;color:var(--green-deep);">${esc(w.title || "제목")}</p>
+      <textarea readonly style="background:#f5f5f5;color:var(--gray);">${w.text || "(내용 없음)"}</textarea>
+      <label>평가 (1-10)</label>
+      <input type="number" id="deepScore" min="1" max="10" value="${myScore}" placeholder="점수를 입력하세요">
+      <div class="btn-row">
+        <button class="btn btn-ghost" onclick="renderDeepJudgeHome()">← 돌아가기</button>
+        <button class="btn btn-green" onclick="submitDeepScore(${vIdx})">평가 ${myScore ? "수정" : "제출"} ✓</button>
+      </div>
+    </div>
+  `;
+}
+
+async function submitDeepScore(vIdx) {
+  const score = parseInt($("#deepScore").value);
+  if (!score || score < 1 || score > 10) return toast("1-10 사이의 점수를 입력하세요");
+
+  showLoad(true);
+  const judgeId = localStorage.getItem("judgeId_" + state.eventId);
+
+  const deepScores = state.event.deepScores || {};
+  if (!deepScores[vIdx]) deepScores[vIdx] = {};
+  deepScores[vIdx][judgeId] = score;
+
+  try {
+    await db.collection("events").doc(state.eventId).update({deepScores});
+    showLoad(false);
+    toast("제출됨");
+    renderDeepJudgeHome();
+  } catch(e) {
+    showLoad(false);
+    toast("실패");
+  }
+}
+</script>
 </body>
 </html>
