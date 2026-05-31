@@ -86,7 +86,7 @@ const getMasterPw = () => atob(_mk.join("")).split("").reverse().join("");
 const $ = (s) => document.querySelector(s);
 const screen = document.getElementById("screen");
 
-let state = { eventId: null, event: null };
+let state = { eventId: null, event: null, unsub: null };
 
 function showLoad(b) { document.getElementById("loading").classList.toggle("on", b); }
 function toast(msg) { const t = $("#toast"); t.textContent = msg; t.classList.add("on"); setTimeout(() => t.classList.remove("on"), 2200); }
