@@ -15,12 +15,12 @@ html, body { margin: 0; padding: 0; }
 body { font-family: 'Noto Sans KR'; background: radial-gradient(1200px 600px at 100% -10%, #f3faf5 0%, transparent 60%), radial-gradient(900px 500px at -10% 110%, #eef8f1 0%, transparent 55%), var(--white); color: var(--ink); min-height: 100vh; }
 .app { max-width: 900px; margin: 0 auto; padding: 22px 18px 90px; }
 .topbar { display: flex; align-items: center; gap: 12px; padding: 10px 4px 18px; }
-.logo { font-size: 22px; font-weight: 900; color: var(--green-deep); display: flex; align-items: center; gap: 9px; letter-spacing: -0.5px; }
+.logo { font-size: 22px; font-weight: 900; color: var(--green-deep); display: flex; align-items: center; gap: 9px; }
 .logo .dot { width: 30px; height: 30px; border-radius: 9px; background: linear-gradient(135deg, var(--green), var(--green-deep)); display: grid; place-items: center; color: #fff; font-size: 16px; box-shadow: var(--shadow); }
-.ev-tag { margin-left: auto; font-size: 13px; color: var(--green-deep); background: var(--green-soft); border: 1px solid var(--green-line); padding: 6px 12px; border-radius: 999px; font-weight: 700; max-width: 55%; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; display: none; }
+.ev-tag { margin-left: auto; font-size: 13px; color: var(--green-deep); background: var(--green-soft); border: 1px solid var(--green-line); padding: 6px 12px; border-radius: 999px; font-weight: 700; display: none; }
 .card { background: var(--white); border: 1px solid var(--line); border-radius: 20px; padding: 26px 22px; box-shadow: var(--shadow); margin-bottom: 18px; }
-.card h1 { font-weight: 900; font-size: 27px; margin: 0 0 6px; color: var(--green-deep); letter-spacing: -0.5px; }
-.card h2 { font-weight: 900; font-size: 21px; margin: 0 0 14px; color: var(--ink); letter-spacing: -0.3px; }
+.card h1 { font-weight: 900; font-size: 27px; margin: 0 0 6px; color: var(--green-deep); }
+.card h2 { font-weight: 900; font-size: 21px; margin: 0 0 14px; color: var(--ink); }
 .sub { color: var(--gray); font-size: 14px; margin: 0 0 20px; line-height: 1.6; }
 label { display: block; font-weight: 700; font-size: 14px; margin: 14px 0 7px; color: var(--ink); }
 input[type=text], input[type=password], input[type=number], textarea, select { width: 100%; border: 2px solid var(--line); border-radius: 13px; padding: 13px 15px; font-size: 16px; font-family: inherit; color: var(--ink); background: #fbfdfc; transition: border-color .15s, box-shadow .15s; }
@@ -35,7 +35,7 @@ textarea { resize: vertical; min-height: 150px; line-height: 1.7; }
 .btn-row { display: flex; gap: 10px; margin-top: 18px; }
 .btn-row .btn { flex: 1; }
 .choice { display: grid; gap: 14px; }
-.choice-btn { text-align: left; border: 2px solid var(--line); border-radius: 18px; background: #fff; padding: 20px; cursor: pointer; transition: border-color .15s, transform .08s; display: flex; gap: 16px; align-items: center; }
+.choice-btn { text-align: left; border: 2px solid var(--line); border-radius: 18px; background: #fff; padding: 20px; cursor: pointer; transition: border-color .15s; display: flex; gap: 16px; align-items: center; }
 .choice-btn:hover { border-color: var(--green); }
 .choice-ic { width: 50px; height: 50px; border-radius: 14px; display: grid; place-items: center; font-size: 24px; flex-shrink: 0; background: var(--green-soft); }
 .choice-btn .t { font-weight: 900; font-size: 17px; }
@@ -48,6 +48,28 @@ textarea { resize: vertical; min-height: 150px; line-height: 1.7; }
 #toast { position: fixed; left: 50%; bottom: 80px; transform: translateX(-50%) translateY(20px); background: var(--ink); color: #fff; padding: 12px 20px; border-radius: 12px; font-size: 14px; font-weight: 700; opacity: 0; pointer-events: none; transition: .25s; z-index: 120; box-shadow: var(--shadow); max-width: 88%; text-align: center; }
 #toast.on { opacity: 1; transform: translateX(-50%) translateY(0); }
 .hidden { display: none !important; }
+.crit-row { padding: 14px 0; border-bottom: 1px dashed var(--line); }
+.crit-row:last-child { border-bottom: none; }
+.crit-head { display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px; }
+.crit-name { font-weight: 900; font-size: 16px; }
+.scale { display: flex; gap: 5px; }
+.scale button { flex: 1; border: 1.5px solid var(--green-line); background: #fff; color: var(--green-deep); border-radius: 9px; padding: 9px 0; font-size: 14px; font-weight: 700; cursor: pointer; transition: all .1s; font-family: inherit; }
+.scale button.on { background: var(--green); color: #fff; border-color: var(--green); }
+.judge-img { width: 100%; border-radius: 16px; border: 1px solid var(--line); background: #f3f3f3; display: block; margin-bottom: 16px; max-height: 48vh; object-fit: contain; }
+.judge-text { background: var(--green-soft); border: 1px solid var(--green-line); border-radius: 14px; padding: 16px; font-size: 16px; line-height: 1.85; white-space: pre-wrap; color: var(--ink); margin-bottom: 6px; }
+.rank { display: flex; gap: 14px; padding: 16px; border-radius: 16px; margin-bottom: 11px; border: 1px solid var(--line); background: #fff; }
+.rank.top1 { background: linear-gradient(135deg,#fffdf2,#fff6d0); border-color: var(--yellow); }
+.rank.top2 { background: #f7faf8; }
+.rank.top3 { background: #fbfdfc; }
+.medal { font-size: 26px; width: 46px; height: 46px; border-radius: 50%; display: grid; place-items: center; flex-shrink: 0; color: #fff; font-weight: 900; }
+.medal.m1 { background: var(--yellow); color: var(--ink); }
+.medal.m2 { background: #9fb3a8; }
+.medal.m3 { background: #cd9b6a; }
+.rank-info { flex: 1; min-width: 0; }
+.rank-info .nm { font-weight: 900; font-size: 15px; }
+.rank-info .who { font-size: 12.5px; color: var(--red); font-weight: 700; margin-top: 2px; }
+.rank-score { font-size: 24px; font-weight: 900; color: var(--green-deep); text-align: right; }
+.rank-score small { font-size: 12px; color: var(--gray); display: block; }
 </style>
 </head>
 <body>
@@ -76,17 +98,16 @@ let db = null;
 try {
   firebase.initializeApp(firebaseConfig);
   db = firebase.firestore();
-  console.log("✓ Firebase");
+  console.log("✓ Firebase OK");
 } catch(e) {
-  console.error("Firebase init", e);
+  console.error("Firebase error", e);
 }
 
-const _mk = ["NjIwMmV0b3", "ZzaXlvdg=="];
-const getMasterPw = () => atob(_mk.join("")).split("").reverse().join("");
-const $ = (s) => document.querySelector(s);
+const $ = s => document.querySelector(s);
 const screen = document.getElementById("screen");
 
 let state = { eventId: null, event: null, unsub: null };
+let imgCache = {};
 
 function showLoad(b) { document.getElementById("loading").classList.toggle("on", b); }
 function toast(msg) { const t = $("#toast"); t.textContent = msg; t.classList.add("on"); setTimeout(() => t.classList.remove("on"), 2200); }
@@ -99,14 +120,14 @@ function renderHome() {
       <h1>안녕하세요 👋</h1>
       <p class="sub">공모전 Voice를 등록하고, QR로 심사자들의 점수를 모아 순위를 매기는 시스템입니다.</p>
       <div class="choice">
-        <button class="choice-btn" onclick="goNewEventForm()">
+        <button class="choice-btn" onclick="renderNewEventForm()">
           <div class="choice-ic">✨</div>
           <div>
             <div class="t">새 이벤트 만들기</div>
             <div class="d">이벤트 이름과 4자리 비밀번호를 정합니다</div>
           </div>
         </button>
-        <button class="choice-btn" onclick="goOpenEvent()">
+        <button class="choice-btn" onclick="renderOpenEventForm()">
           <div class="choice-ic">📂</div>
           <div>
             <div class="t">기존 이벤트 열기</div>
@@ -114,12 +135,12 @@ function renderHome() {
           </div>
         </button>
       </div>
-      <button class="btn btn-ghost btn-sm" style="margin-top:16px;width:100%;opacity:.7" onclick="adminGate()">🔒 관리자 모드</button>
+      <button class="btn btn-ghost btn-sm" style="margin-top:16px;width:100%;opacity:.7" onclick="renderAdminGate()">🔒 관리자 모드</button>
     </div>
   `;
 }
 
-function goNewEventForm() {
+function renderNewEventForm() {
   screen.innerHTML = `
     <div class="card">
       <h1>새 이벤트 만들기</h1>
@@ -132,24 +153,47 @@ function goNewEventForm() {
       <input type="password" id="evPw" inputmode="numeric" maxlength="4" placeholder="● ● ● ●">
       <label>Voice 개수</label>
       <input type="number" id="voiceCount" min="1" max="100" value="5" inputmode="numeric">
+      <label>심사 기준 개수</label>
+      <select id="critCount" onchange="renderCritInputs()">
+        <option value="3">3개</option>
+        <option value="4">4개</option>
+        <option value="5" selected>5개</option>
+        <option value="6">6개</option>
+        <option value="7">7개</option>
+      </select>
+      <div id="critInputs" style="margin-top:10px"></div>
       <div class="btn-row">
         <button class="btn btn-ghost" onclick="renderHome()">뒤로</button>
-        <button class="btn btn-green" onclick="createEvent()">만들기 →</button>
+        <button class="btn btn-green" onclick="doCreateEvent()">만들기 →</button>
       </div>
     </div>
   `;
+  renderCritInputs();
+}
+
+function renderCritInputs() {
+  const n = parseInt(document.getElementById("critCount").value);
+  let html = "";
+  const defaultCrit = ["이익성", "창의성", "흥미성", "현실성", "적합성"];
+  for (let i = 0; i < n; i++) {
+    html += `<input type="text" class="critName" placeholder="기준 ${i+1}" value="${defaultCrit[i] || ''}" style="margin-bottom:8px">`;
+  }
+  document.getElementById("critInputs").innerHTML = html;
 }
 
 async function doCreateEvent() {
-  const name = $("#evName").value.trim();
-  const owner = $("#evOwner").value.trim();
-  const pw = $("#evPw").value.trim();
-  const voiceCount = parseInt($("#voiceCount").value);
+  const name = document.getElementById("evName").value.trim();
+  const owner = document.getElementById("evOwner").value.trim();
+  const pw = document.getElementById("evPw").value.trim();
+  const voiceCount = parseInt(document.getElementById("voiceCount").value);
 
-  if (name.length < 2) return toast("이벤트 이름을 입력하세요");
-  if (owner.length < 1) return toast("작성 주체자 이름을 입력하세요");
+  if (!name) return toast("이벤트 이름을 입력하세요");
+  if (!owner) return toast("작성 주체자 이름을 입력하세요");
   if (!/^\d{4}$/.test(pw)) return toast("비밀번호는 숫자 4자리");
   if (!voiceCount || voiceCount < 1 || voiceCount > 100) return toast("Voice는 1~100개");
+
+  const critNames = [...document.querySelectorAll(".critName")].map(i => i.value.trim());
+  if (critNames.some(c => !c)) return toast("모든 심사 기준 이름을 입력하세요");
 
   showLoad(true);
   try {
@@ -157,7 +201,11 @@ async function doCreateEvent() {
     const works = Array.from({length: voiceCount}, () => ({imgs: [], title: "", text: "", org: "", author: ""}));
     
     await db.collection("events").doc(id).set({
-      name, owner, pw, totalWorks: voiceCount, works, phase: "input", judges: 0, currentWork: 0, scores: {}, deepScores: {}
+      name, owner, pw, totalWorks: voiceCount, 
+      works, 
+      criteria: critNames.map((nm, i) => ({key: "c" + i, name: nm})),
+      phase: "input", judges: 0, currentWork: 0, 
+      scores: {}, deepScores: {}
     });
 
     state.eventId = id;
@@ -169,7 +217,7 @@ async function doCreateEvent() {
   }
 }
 
-function goOpenEvent() {
+function renderOpenEventForm() {
   screen.innerHTML = `
     <div class="card">
       <h1>기존 이벤트 열기</h1>
@@ -184,27 +232,19 @@ function goOpenEvent() {
       </div>
     </div>
   `;
-  listEvents();
+  loadEventsList();
 }
 
-async function listEvents() {
+async function loadEventsList() {
   try {
     const snap = await db.collection("events").get();
     const items = [];
-    
     snap.forEach(d => {
       const v = d.data();
-      items.push({
-        id: d.id,
-        name: v.name,
-        owner: v.owner,
-        n: v.totalWorks,
-        phase: v.phase
-      });
+      items.push({ id: d.id, name: v.name, n: v.totalWorks, phase: v.phase });
     });
 
     const el = document.getElementById("evList");
-    
     if (!items.length) {
       el.innerHTML = '<p class="sub">등록된 이벤트가 없습니다</p>';
       return;
@@ -221,15 +261,12 @@ async function listEvents() {
         </button>
       `).join("") + 
     '</div>';
-  } catch(e) {
-    console.error(e);
-  }
+  } catch(e) { console.error(e); }
 }
 
 async function doOpenEvent() {
-  const id = $("#openId").value.trim();
-  const pw = $("#openPw").value.trim();
-
+  const id = document.getElementById("openId").value.trim();
+  const pw = document.getElementById("openPw").value.trim();
   if (!id) return toast("이벤트 ID를 입력하세요");
 
   showLoad(true);
@@ -279,7 +316,6 @@ async function enterHub() {
 }
 
 let inputIdx = 0;
-
 async function goInput() {
   showLoad(true);
   const doc = await db.collection("events").doc(state.eventId).get();
@@ -323,8 +359,8 @@ function inputMove(d) {
 }
 
 async function saveWork(goNext) {
-  const text = $("#wtext").value.trim();
-  const title = $("#wtitle").value.trim();
+  const text = document.getElementById("wtext").value.trim();
+  const title = document.getElementById("wtitle").value.trim();
   if (!text && !title) return toast("제목 또는 글을 입력하세요");
 
   showLoad(true);
@@ -334,8 +370,8 @@ async function saveWork(goNext) {
       imgs: works[inputIdx].imgs,
       title,
       text,
-      org: $("#worg").value.trim(),
-      author: $("#wauthor").value.trim()
+      org: document.getElementById("worg").value.trim(),
+      author: document.getElementById("wauthor").value.trim()
     };
     
     await db.collection("events").doc(state.eventId).update({works});
@@ -389,16 +425,11 @@ function goJudge() {
 }
 
 async function goInstantJudge() {
-  const ev = state.event;
-  if (!ev.works.filter(x => x.text || x.title).length) {
-    return toast("먼저 Voice를 입력하세요");
-  }
-
   screen.innerHTML = `
     <div class="card">
       <h1>심사자 인원 설정</h1>
       <label>심사자 수</label>
-      <input type="number" id="jcount" min="1" max="50" value="2" inputmode="numeric">
+      <input type="number" id="jcount" min="1" max="50" value="2">
       <div class="btn-row">
         <button class="btn btn-ghost" onclick="goJudge()">뒤로</button>
         <button class="btn btn-green" onclick="startInstantJudge()">QR 생성 →</button>
@@ -408,7 +439,7 @@ async function goInstantJudge() {
 }
 
 async function startInstantJudge() {
-  const j = parseInt($("#jcount").value);
+  const j = parseInt(document.getElementById("jcount").value);
   if (!j || j < 1 || j > 50) return toast("1~50 사이로 입력");
 
   showLoad(true);
@@ -419,23 +450,17 @@ async function startInstantJudge() {
     assignedCount: 0
   });
   showLoad(false);
-  
   toast("심사 모드 시작!");
   enterHub();
 }
 
 async function goDeepJudge() {
-  const ev = state.event;
-  if (!ev.works.filter(x => x.text || x.title).length) {
-    return toast("먼저 Voice를 입력하세요");
-  }
-
   screen.innerHTML = `
     <div class="card">
       <h1>진중히 심사하기 설정</h1>
       <p class="sub">심사위원들이 자유로운 속도로 심사합니다</p>
       <label>심사위원 수</label>
-      <input type="number" id="deejcount" min="1" max="50" value="2" inputmode="numeric">
+      <input type="number" id="deejcount" min="1" max="50" value="2">
       <div class="btn-row">
         <button class="btn btn-ghost" onclick="goJudge()">뒤로</button>
         <button class="btn btn-green" onclick="startDeepJudge()">QR 생성 →</button>
@@ -445,14 +470,12 @@ async function goDeepJudge() {
 }
 
 async function startDeepJudge() {
-  const j = parseInt($("#deejcount").value);
+  const j = parseInt(document.getElementById("deejcount").value);
   if (!j || j < 1 || j > 50) return toast("1~50 사이로 입력");
 
   showLoad(true);
   const deepScores = {};
-  state.event.works.forEach((_, i) => {
-    deepScores[i] = {};
-  });
+  state.event.works.forEach((_, i) => { deepScores[i] = {}; });
 
   await db.collection("events").doc(state.eventId).update({
     phase: "deepjudging",
@@ -467,21 +490,20 @@ async function startDeepJudge() {
 }
 
 function showDeepQR() {
-  const params = new URLSearchParams(location.search);
   const baseUrl = location.origin + location.pathname;
   const deepUrl = baseUrl + "?ev=" + state.eventId + "&role=judge&type=deep";
 
   screen.innerHTML = `
     <div class="card">
       <h1>진중히 심사 QR</h1>
-      <p class="sub">심사위원들은 아래 QR을 찍어 입장합니다. 자신의 속도대로 심사할 수 있어요.</p>
+      <p class="sub">심사위원들은 아래 QR을 찍어 입장합니다</p>
       <div style="text-align:center;padding:8px 0;margin:20px 0;">
         <div id="qrcode2" style="display:inline-block;background:#fff;padding:16px;border-radius:18px;border:2px solid var(--green-line);box-shadow:var(--shadow);"></div>
       </div>
       <div style="margin-top:12px;font-size:13px;color:var(--gray);word-break:break-all;background:var(--green-soft);padding:10px 12px;border-radius:10px;">${deepUrl}</div>
       <div class="btn-row">
         <button class="btn btn-ghost" onclick="enterHub()">허브</button>
-        <button class="btn btn-green" onclick="hostDeepDashboard()">진행자 대시보드 →</button>
+        <button class="btn btn-green" onclick="hostDeepDashboard()">대시보드 →</button>
       </div>
     </div>
   `;
@@ -524,7 +546,6 @@ function renderDeepDashboard() {
         <div style="flex:1;height:24px;background:#fff;border:1px solid var(--green-line);border-radius:8px;overflow:hidden;">
           <div style="height:100%;background:linear-gradient(90deg,var(--yellow),var(--green));width:${stats.completed/stats.total*100}%;display:flex;align-items:center;justify-content:center;color:#fff;font-size:11px;font-weight:700;">${stats.completed}/${stats.total}</div>
         </div>
-        <div style="min-width:50px;text-align:right;font-weight:700;color:var(--green-deep);">${Math.round(stats.completed/stats.total*100)}%</div>
       </div>
     </div>
   `).join("");
@@ -537,37 +558,35 @@ function renderDeepDashboard() {
         ${statusItems || '<p class="sub" style="text-align:center">아직 심사위원이 접속하지 않았습니다</p>'}
       </div>
       <div class="btn-row">
-        <button class="btn btn-ghost" onclick="location.reload()">새로고침 🔄</button>
-        <button class="btn btn-green" onclick="finishDeepJudge()">심사 종료 · 결과 보기 🏆</button>
+        <button class="btn btn-ghost" onclick="location.reload()">새로고침</button>
+        <button class="btn btn-green" onclick="finishDeepJudge()">종료 · 결과 보기</button>
       </div>
-      <button class="btn btn-ghost btn-sm" style="margin-top:14px" onclick="enterHub()">허브로</button>
     </div>
   `;
 }
 
 async function finishDeepJudge() {
   if (state.unsub) state.unsub();
-  
-  await db.collection("events").doc(state.eventId).update({
-    phase: "done"
-  });
-
+  await db.collection("events").doc(state.eventId).update({phase: "done"});
   const doc = await db.collection("events").doc(state.eventId).get();
   state.event = doc.data();
   goResult();
 }
 
-function goResult() {
+async function goResult() {
+  showLoad(true);
+  const doc = await db.collection("events").doc(state.eventId).get();
+  state.event = doc.data();
+  showLoad(false);
+
   const ev = state.event;
   const rows = [];
 
   ev.works.forEach((w, i) => {
     if (w.text || w.title) {
       let total = 0, judged = 0;
-      
       const instantScores = ev.scores && ev.scores[i] ? ev.scores[i] : {};
       const deepScores = ev.deepScores && ev.deepScores[i] ? ev.deepScores[i] : {};
-      
       const allScores = {...instantScores, ...deepScores};
       
       Object.values(allScores).forEach(score => {
@@ -589,15 +608,13 @@ function goResult() {
     <div class="card">
       <h1>🏆 최종 순위</h1>
       ${rows.length ? rows.map((r, rk) => `
-        <div style="display:flex;gap:14px;padding:16px;border-radius:16px;margin-bottom:11px;border:1px solid var(--line);background:${rk === 0 ? "linear-gradient(135deg,#fffdf2,#fff6d0)" : rk === 1 ? "#f7faf8" : "#fbfdfc"};">
-          <div style="font-size:26px;width:46px;height:46px;border-radius:50%;display:grid;place-items:center;flex-shrink:0;color:#fff;font-weight:900;background:${rk === 0 ? "var(--yellow);color:var(--ink)" : rk === 1 ? "#9fb3a8" : "#cd9b6a"};">${rk < 3 ? ["🥇", "🥈", "🥉"][rk] : rk + 1}</div>
-          <div style="flex:1;">
-            <div style="font-weight:900;font-size:15px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">${esc(r.w.title || "Voice " + (r.i + 1))}</div>
-            <div style="font-size:12.5px;color:var(--gray);font-weight:700;margin-top:2px;">${esc(r.w.author || "이름 미입력")}</div>
+        <div class="rank ${rk === 0 ? 'top1' : rk === 1 ? 'top2' : rk === 2 ? 'top3' : ''}">
+          <div class="medal ${rk === 0 ? 'm1' : rk === 1 ? 'm2' : rk === 2 ? 'm3' : ''}">${rk < 3 ? ["🥇", "🥈", "🥉"][rk] : rk + 1}</div>
+          <div class="rank-info">
+            <div class="nm">${esc(r.w.title || "Voice " + (r.i + 1))}</div>
+            <div class="who">${esc(r.w.author || "이름 미입력")} · ${esc(r.w.org || "소속 미입력")}</div>
           </div>
-          <div style="font-size:24px;font-weight:900;color:var(--green-deep);text-align:right;">
-            ${r.total}<br><small style="font-size:12px;color:var(--gray);display:block;">${r.judged}명</small>
-          </div>
+          <div class="rank-score">${r.total}<small>${r.judged}명</small></div>
         </div>
       `).join("") : "<p class='sub'>아직 점수가 없습니다</p>"}
       <div class="btn-row">
@@ -608,19 +625,12 @@ function goResult() {
   `;
 }
 
-let adminUnlocked = false;
-
-function adminGate() {
-  if (adminUnlocked) {
-    adminPanel();
-    return;
-  }
-
+function renderAdminGate() {
   screen.innerHTML = `
     <div class="card">
       <h1>🔒 관리자 모드</h1>
       <label>마스터 비밀번호</label>
-      <input type="password" id="masterPw" placeholder="비밀번호">
+      <input type="password" id="masterPw">
       <div class="btn-row">
         <button class="btn btn-ghost" onclick="renderHome()">뒤로</button>
         <button class="btn btn-dark" onclick="adminUnlock()">입장 →</button>
@@ -630,10 +640,9 @@ function adminGate() {
 }
 
 function adminUnlock() {
-  const pw = $("#masterPw").value;
-  if (pw !== getMasterPw()) return toast("비밀번호가 틀립니다");
-  
-  adminUnlocked = true;
+  const pw = document.getElementById("masterPw").value;
+  const masterPw = atob("NjIwMmV0b3" + "ZzaXlvdg==").split("").reverse().join("");
+  if (pw !== masterPw) return toast("비밀번호가 틀립니다");
   adminPanel();
 }
 
@@ -686,23 +695,20 @@ async function adminDelete(id, name) {
   }
 }
 
-renderHome();
-
 const params = new URLSearchParams(location.search);
 if (params.get("ev") && params.get("role") === "judge") {
-  showLoad(true);
-  
   if (params.get("type") === "deep") {
     joinAsDeepJudge(params.get("ev"));
   } else {
-    joinAsJudge(params.get("ev"));
+    joinAsInstantJudge(params.get("ev"));
   }
+} else {
+  renderHome();
 }
 
-async function joinAsJudge(eventId) {
+async function joinAsInstantJudge(eventId) {
   const doc = await db.collection("events").doc(eventId).get();
   if (!doc.exists) {
-    showLoad(false);
     screen.innerHTML = '<div class="card"><h1>이벤트 없음</h1></div>';
     return;
   }
@@ -714,53 +720,90 @@ async function joinAsJudge(eventId) {
   state.unsub = db.collection("events").doc(eventId).onSnapshot(snap => {
     if (!snap.exists()) return;
     state.event = snap.data();
-    renderJudgeScreen();
+    renderInstantJudgeScreen();
   });
 }
 
-function renderJudgeScreen() {
+function renderInstantJudgeScreen() {
   const ev = state.event;
   if (ev.phase !== "judging") {
-    showLoad(false);
     screen.innerHTML = '<div class="card"><h1>심사가 종료되었습니다</h1></div>';
     return;
   }
-
-  showLoad(false);
 
   const cur = ev.currentWork;
   const w = ev.works[cur];
 
   if (!w || (!w.text && !w.title)) {
-    screen.innerHTML = '<div class="card center"><h1>⏳</h1><p class="sub">진행자를 기다리는 중...</p></div>';
+    screen.innerHTML = '<div class="card"><h1>⏳ 진행자를 기다리는 중...</h1></div>';
     return;
   }
+
+  const criteria = ev.criteria || [];
 
   screen.innerHTML = `
     <div class="card">
       <h2>Voice ${cur + 1}/${ev.totalWorks}</h2>
+      <img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mNk+M9QDwADhgGAWjR9awAAAABJRU5ErkJggg==" style="display:none">
       <p style="font-size:18px;font-weight:700;color:var(--green-deep);">${esc(w.title || "제목 없음")}</p>
-      <textarea readonly style="background:#f5f5f5;color:var(--gray);">${w.text || "(내용 없음)"}</textarea>
-      <label>평가 (1-10)</label>
-      <input type="number" id="myScore" min="1" max="10" placeholder="점수를 입력하세요">
-      <button class="btn btn-green" onclick="submitJudgeScore()">평가 제출 ✓</button>
+      <div class="judge-text">${esc(w.text || "(내용 없음)")}</div>
+      ${criteria.length ? `
+        <div style="margin-top:18px;">
+          ${criteria.map(c => `
+            <div class="crit-row">
+              <div class="crit-head">
+                <span class="crit-name">${c.name}</span>
+                <span id="v_${c.key}" style="font-size:22px;color:var(--green-deep);min-width:46px;text-align:right;">-</span>
+              </div>
+              <div class="scale" data-key="${c.key}">
+                ${Array.from({length:10}, (_,i) => `<button data-v="${i+1}" onclick="pickScore('${c.key}',${i+1})">${i+1}</button>`).join("")}
+              </div>
+            </div>
+          `).join("")}
+        </div>
+      ` : `
+        <label>평가 (1-10)</label>
+        <input type="number" id="score" min="1" max="10" placeholder="점수">
+      `}
+      <button class="btn btn-green" style="margin-top:18px" onclick="submitInstantScore(${cur})">평가 제출 ✓</button>
     </div>
   `;
 }
 
-async function submitJudgeScore() {
-  const score = parseInt($("#myScore").value);
-  if (!score || score < 1 || score > 10) return toast("1-10 사이의 점수를 입력하세요");
+let myScores = {};
+
+function pickScore(key, val) {
+  myScores[key] = val;
+  const row = document.querySelector(`.scale[data-key="${key}"]`);
+  if (row) {
+    [...row.children].forEach(b => {
+      const bv = +b.dataset.v;
+      b.classList.toggle("on", bv <= val);
+    });
+  }
+  const vEl = document.getElementById("v_" + key);
+  if (vEl) vEl.textContent = val;
+}
+
+async function submitInstantScore(cur) {
+  const criteria = state.event.criteria || [];
+  
+  if (criteria.length) {
+    for (const c of criteria) {
+      if (!myScores[c.key]) return toast(c.name + " 점수를 선택하세요");
+    }
+  } else {
+    const score = parseInt(document.getElementById("score").value);
+    if (!score || score < 1 || score > 10) return toast("1-10 사이의 점수를 입력하세요");
+    myScores = {score};
+  }
 
   showLoad(true);
-  const cur = state.event.currentWork;
-  const judgeId = localStorage.getItem("judgeId_" + state.eventId) || "judge_" + Date.now();
+  const judgeId = "judge_" + Math.random().toString(36).slice(2, 8);
   
-  localStorage.setItem("judgeId_" + state.eventId, judgeId);
-
   const scores = state.event.scores || {};
   if (!scores[cur]) scores[cur] = {};
-  scores[cur][judgeId] = score;
+  scores[cur][judgeId] = {...myScores, t: Date.now()};
 
   try {
     await db.collection("events").doc(state.eventId).update({scores});
@@ -775,7 +818,6 @@ async function submitJudgeScore() {
 async function joinAsDeepJudge(eventId) {
   const doc = await db.collection("events").doc(eventId).get();
   if (!doc.exists) {
-    showLoad(false);
     screen.innerHTML = '<div class="card"><h1>이벤트 없음</h1></div>';
     return;
   }
@@ -786,7 +828,6 @@ async function joinAsDeepJudge(eventId) {
   const judgeId = "judge_" + Math.random().toString(36).slice(2, 8);
   localStorage.setItem("judgeId_" + eventId, judgeId);
 
-  showLoad(false);
   renderDeepJudgeHome();
 }
 
@@ -830,33 +871,78 @@ async function deepJudgeVoice(vIdx) {
 
   const judgeId = localStorage.getItem("judgeId_" + state.eventId);
   const deepScores = state.event.deepScores || {};
-  const myScore = deepScores[vIdx] && deepScores[vIdx][judgeId] ? deepScores[vIdx][judgeId] : "";
+  const myScore = deepScores[vIdx] && deepScores[vIdx][judgeId] ? {...deepScores[vIdx][judgeId]} : {};
+  
+  myScores = {};
+  Object.keys(myScore).filter(k => k !== "t").forEach(k => {
+    myScores[k] = myScore[k];
+  });
+
+  const criteria = state.event.criteria || [];
 
   screen.innerHTML = `
     <div class="card">
       <h2>Voice ${vIdx + 1}/${state.event.totalWorks}</h2>
       <p style="font-size:18px;font-weight:700;color:var(--green-deep);">${esc(w.title || "제목")}</p>
-      <textarea readonly style="background:#f5f5f5;color:var(--gray);">${w.text || "(내용 없음)"}</textarea>
-      <label>평가 (1-10)</label>
-      <input type="number" id="deepScore" min="1" max="10" value="${myScore}" placeholder="점수를 입력하세요">
+      <div class="judge-text">${esc(w.text || "(내용 없음)")}</div>
+      ${criteria.length ? `
+        <div style="margin-top:18px;">
+          ${criteria.map(c => `
+            <div class="crit-row">
+              <div class="crit-head">
+                <span class="crit-name">${c.name}</span>
+                <span id="v_${c.key}" style="font-size:22px;color:var(--green-deep);min-width:46px;text-align:right;">-</span>
+              </div>
+              <div class="scale" data-key="${c.key}">
+                ${Array.from({length:10}, (_,i) => `<button data-v="${i+1}" onclick="pickScore('${c.key}',${i+1})">${i+1}</button>`).join("")}
+              </div>
+            </div>
+          `).join("")}
+        </div>
+      ` : `
+        <label>평가 (1-10)</label>
+        <input type="number" id="score" min="1" max="10" placeholder="점수">
+      `}
       <div class="btn-row">
         <button class="btn btn-ghost" onclick="renderDeepJudgeHome()">← 돌아가기</button>
-        <button class="btn btn-green" onclick="submitDeepScore(${vIdx})">평가 ${myScore ? "수정" : "제출"} ✓</button>
+        <button class="btn btn-green" onclick="submitDeepScore(${vIdx})">평가 ${Object.keys(myScores).length > 0 ? "수정" : "제출"} ✓</button>
       </div>
     </div>
   `;
+
+  Object.keys(myScores).forEach(k => {
+    const val = myScores[k];
+    const row = document.querySelector(`.scale[data-key="${k}"]`);
+    if (row) {
+      [...row.children].forEach(b => {
+        const bv = +b.dataset.v;
+        b.classList.toggle("on", bv <= val);
+      });
+    }
+    const vEl = document.getElementById("v_" + k);
+    if (vEl) vEl.textContent = val;
+  });
 }
 
 async function submitDeepScore(vIdx) {
-  const score = parseInt($("#deepScore").value);
-  if (!score || score < 1 || score > 10) return toast("1-10 사이의 점수를 입력하세요");
+  const criteria = state.event.criteria || [];
+  
+  if (criteria.length) {
+    for (const c of criteria) {
+      if (!myScores[c.key]) return toast(c.name + " 점수를 선택하세요");
+    }
+  } else {
+    const score = parseInt(document.getElementById("score").value);
+    if (!score || score < 1 || score > 10) return toast("1-10 사이의 점수를 입력하세요");
+    myScores = {score};
+  }
 
   showLoad(true);
   const judgeId = localStorage.getItem("judgeId_" + state.eventId);
 
   const deepScores = state.event.deepScores || {};
   if (!deepScores[vIdx]) deepScores[vIdx] = {};
-  deepScores[vIdx][judgeId] = score;
+  deepScores[vIdx][judgeId] = {...myScores, t: Date.now()};
 
   try {
     await db.collection("events").doc(state.eventId).update({deepScores});
