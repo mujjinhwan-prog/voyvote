@@ -99,14 +99,14 @@ function renderHome() {
       <h1>안녕하세요 👋</h1>
       <p class="sub">공모전 Voice를 등록하고, QR로 심사자들의 점수를 모아 순위를 매기는 시스템입니다.</p>
       <div class="choice">
-        <button class="choice-btn" onclick="newEventForm()">
+        <button class="choice-btn" onclick="goNewEventForm()">
           <div class="choice-ic">✨</div>
           <div>
             <div class="t">새 이벤트 만들기</div>
             <div class="d">이벤트 이름과 4자리 비밀번호를 정합니다</div>
           </div>
         </button>
-        <button class="choice-btn" onclick="openEventForm()">
+        <button class="choice-btn" onclick="goOpenEvent()">
           <div class="choice-ic">📂</div>
           <div>
             <div class="t">기존 이벤트 열기</div>
@@ -169,23 +169,64 @@ async function doCreateEvent() {
   }
 }
 
-function goOpenEventForm() {
+function goOpenEvent() {
   screen.innerHTML = `
     <div class="card">
       <h1>기존 이벤트 열기</h1>
+      <div id="evList" style="margin-bottom:20px;"></div>
       <label>이벤트 ID</label>
       <input type="text" id="openId" placeholder="ev_xxxxx">
       <label>비밀번호</label>
       <input type="password" id="openPw" inputmode="numeric" maxlength="4" placeholder="● ● ● ●">
       <div class="btn-row">
         <button class="btn btn-ghost" onclick="renderHome()">뒤로</button>
-        <button class="btn btn-green" onclick="doOpen()">열기 →</button>
+        <button class="btn btn-green" onclick="doOpenEvent()">열기 →</button>
       </div>
     </div>
   `;
+  listEvents();
 }
 
-async function doOpen() {
+async function listEvents() {
+  try {
+    const snap = await db.collection("events").get();
+    const items = [];
+    
+    snap.forEach(d => {
+      const v = d.data();
+      items.push({
+        id: d.id,
+        name: v.name,
+        owner: v.owner,
+        n: v.totalWorks,
+        phase: v.phase
+      });
+    });
+
+    const el = document.getElementById("evList");
+    
+    if (!items.length) {
+      el.innerHTML = '<p class="sub">등록된 이벤트가 없습니다</p>';
+      return;
+    }
+
+    items.reverse();
+    const phaseTxt = {input: "입력중", judging: "즉석심사중", deepjudging: "진중히심사중", done: "완료"};
+    
+    el.innerHTML = '<div style="display:grid;gap:12px;margin-bottom:16px;">' + 
+      items.map(it => `
+        <button style="text-align:left;border:2px solid var(--line);border-radius:18px;background:#fff;padding:16px;cursor:pointer;transition:border-color .15s;display:block;width:100%;" onclick="document.getElementById('openId').value='${it.id}';document.getElementById('openPw').focus()">
+          <div style="font-weight:900;font-size:16px;color:var(--green-deep);">${esc(it.name)}</div>
+          <div style="font-size:13px;color:var(--gray);margin-top:6px;">${it.id} · Voice ${it.n}개 · ${phaseTxt[it.phase] || ""}</div>
+        </button>
+      `).join("") + 
+    '</div>';
+  } catch(e) {
+    console.error(e);
+  }
+}
+
+async function doOpenEvent() {
   const id = $("#openId").value.trim();
   const pw = $("#openPw").value.trim();
 
