@@ -119,7 +119,7 @@ function renderHome() {
   `;
 }
 
-function newEventForm() {
+function goNewEventForm() {
   screen.innerHTML = `
     <div class="card">
       <h1>새 이벤트 만들기</h1>
@@ -140,7 +140,7 @@ function newEventForm() {
   `;
 }
 
-async function createEvent() {
+async function doCreateEvent() {
   const name = $("#evName").value.trim();
   const owner = $("#evOwner").value.trim();
   const pw = $("#evPw").value.trim();
@@ -169,7 +169,7 @@ async function createEvent() {
   }
 }
 
-function openEventForm() {
+function goOpenEventForm() {
   screen.innerHTML = `
     <div class="card">
       <h1>기존 이벤트 열기</h1>
